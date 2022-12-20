@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/info"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "name": "MultiSensor",
+        "ip_address": "10.10.10.104",
+        "mac_address": "70:82:0e:12:28:cc",
+        "type": 110,
+        "serial": "2012033140255",
+        "serial_ir": "2453646",
+        "version": {
+          "firmware": "06.26.02 B00802",
+          "atmel": "03.11 B00042",
+          "fsm": "",
+          "gsm": ""
+        },
+        "os_revision": 2,
+        "booted_at": 1671109310,
+        "last_backup": 1644573369,
+        "masterslave": {
+          "is_slave": false,
+          "master_ip": ""
+        }
+      }
+    }
+  }
+}

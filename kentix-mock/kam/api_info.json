@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/info"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "name": "Kentix AlarmManager",
+        "ip_address": "10.10.10.102",
+        "mac_address": "70:82:0e:12:07:22",
+        "type": 8,
+        "serial": "8002003380013",
+        "version": {
+          "firmware": "06.24.00 B00630",
+          "atmel": "",
+          "fsm": "",
+          "gsm": ""
+        },
+        "os_revision": 2,
+        "booted_at": 1671178110,
+        "last_backup": null,
+        "masterslave": {
+          "is_slave": false,
+          "master_ip": ""
+        }
+      }
+    }
+  }
+}

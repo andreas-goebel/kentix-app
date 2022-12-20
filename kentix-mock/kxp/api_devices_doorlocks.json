@@ -1,0 +1,53 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/devices/doorlocks"
+  },
+  "response": {
+    "body": {
+      "data": [
+        {
+          "id": 1,
+          "name": "T\u00fcre ITEC AG",
+          "serial": "81700228000cdee9",
+          "active": true,
+          "default": true,
+          "address": "30",
+          "type": "DoorLock-DC",
+          "double_auth": 0,
+          "couple_time": 6,
+          "switch_alarmzone": "-1|-1",
+          "time_controlled": false,
+          "time_controlled_booking": true,
+          "timeprofile_id": 0,
+          "switch_output": 0,
+          "switch_external": 0,
+          "camera_id": null,
+          "door_contact": null,
+          "alarm_delay": null,
+          "levelprofiles": [
+            1
+          ],
+          "webhooks": [
+            1
+          ]
+        }
+      ],
+      "links": {
+        "first": "https:\/\/10.10.10.103\/api\/devices\/doorlocks?page=1",
+        "last": "https:\/\/10.10.10.103\/api\/devices\/doorlocks?page=1",
+        "prev": null,
+        "next": null
+      },
+      "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "https:\/\/10.10.10.103\/api\/devices\/doorlocks",
+        "per_page": 25,
+        "to": 1,
+        "total": 1
+      }
+    }
+  }
+}

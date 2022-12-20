@@ -1,0 +1,30 @@
+{
+    "request": {
+        "method": "GET",
+        "path": "/api/info"
+    },
+    "response": {
+        "body": {
+            "data": {
+                "name": "Kentix AccessPoint",
+                "ip_address": "10.10.10.103",
+                "mac_address": "70:82:0e:10:cc:ca",
+                "type": 1,
+                "serial": "7002022830071",
+                "version": {
+                    "firmware": "02.03.05 B00530",
+                    "atmel": "",
+                    "fsm": "",
+                    "gsm": ""
+                },
+                "os_revision": 2,
+                "booted_at": 1671109691,
+                "last_backup": null,
+                "masterslave": {
+                    "is_slave": false,
+                    "master_ip": "0.0.0.0"
+                }
+            }
+        }
+    }
+}

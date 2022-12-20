@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/entrycontrol/values"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "co2": {
+          "has_alarm": false,
+          "has_warning": false,
+          "value": "3319.7"
+        },
+        "counting": {
+          "has_alarm": false,
+          "max_count": 100,
+          "value": "0"
+        }
+      }
+    }
+  }
+}

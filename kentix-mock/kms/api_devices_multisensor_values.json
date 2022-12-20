@@ -1,0 +1,97 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/devices/multisensor/values"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "id": 2,
+        "name": "MultiSensor",
+        "state": {
+          "has_alarm": false
+        },
+        "temperature": {
+          "value": "29.6",
+          "has_alarm": false
+        },
+        "humidity": {
+          "value": "21.8",
+          "has_alarm": false
+        },
+        "dewpoint": {
+          "value": "5.5",
+          "has_alarm": false
+        },
+        "air_pressure": {
+          "value": "954.7",
+          "has_alarm": true
+        },
+        "air_quality": {
+          "value": "4",
+          "has_alarm": true
+        },
+        "co2": {
+          "value": "3326.1",
+          "has_warning": true,
+          "has_alarm": true
+        },
+        "heat": {
+          "value": "0.1",
+          "has_alarm": true
+        },
+        "co": {
+          "value": "0",
+          "has_alarm": false
+        },
+        "ti": {
+          "value": "27.5",
+          "has_alarm": true
+        },
+        "motion": {
+          "value": "0",
+          "has_alarm": false
+        },
+        "vibration": {
+          "value": "0",
+          "has_alarm": true
+        },
+        "power_sabotage": {
+          "has_alarm": false
+        },
+        "connection_sabotage": {
+          "has_alarm": false
+        },
+        "internal_sabotage": {
+          "has_alarm": false
+        },
+        "people_count": {
+          "value": "2",
+          "has_alarm": false
+        },
+        "digital_inputs": [
+          {
+            "id": 17,
+            "name": "Input",
+            "input": {
+              "value": "0",
+              "has_alarm": "0",
+              "unit": "",
+              "unit_prefix": ""
+            }
+          },
+          {
+            "id": 18,
+            "name": "Input",
+            "input": {
+              "value": "0",
+              "has_alarm": "0",
+              "unit": "",
+              "unit_prefix": ""
+            }
+          }
+        ]
+      }
+    }
+  }
+}
