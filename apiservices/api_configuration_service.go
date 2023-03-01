@@ -28,7 +28,7 @@ func NewConfigurationApiService() apiserver.ConfigurationApiServicer {
 }
 
 // GetExamples - Get example configuration
-func (s *ConfigurationApiService) GetExamples(ctx context.Context) (apiserver.ImplResponse, error) {
+func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
 	// TODO - update GetExamples with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
@@ -39,7 +39,7 @@ func (s *ConfigurationApiService) GetExamples(ctx context.Context) (apiserver.Im
 }
 
 // PostExample - Creates an example configuration
-func (s *ConfigurationApiService) PostExample(ctx context.Context, example apiserver.Example) (apiserver.ImplResponse, error) {
+func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, example apiserver.Configuration) (apiserver.ImplResponse, error) {
 	// TODO - update PostExample with the required logic for this service method.
 	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
