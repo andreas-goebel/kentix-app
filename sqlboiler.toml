@@ -1,5 +1,5 @@
-output   = "db/template"
-pkgname  = "dbtemplate"
+output   = "db/kentix"
+pkgname  = "dbkentix"
 add-global-variants = true
 wipe     = true
 no-tests = true
@@ -11,10 +11,10 @@ host   = "localhost"
 port   = 5432
 user   = "postgres"
 pass   = "secret"
-schema = "template"
+schema = "kentix"
 sslmode = "disable"
 whitelist = [
-    "example_table"
+    "configuration", "sensor"
 ]
 
 [[types]]
