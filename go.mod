@@ -1,4 +1,4 @@
-module hailo
+module kentix
 
 go 1.18
 

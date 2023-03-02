@@ -12,7 +12,7 @@ package apiservices
 import (
 	"context"
 	"errors"
-	"hailo/apiserver"
+	"kentix/apiserver"
 	"net/http"
 )
 
