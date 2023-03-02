@@ -1,5 +1,5 @@
 /*
- * App template API
+ * Kentix app API
  *
  * API to access and configure the app template
  *

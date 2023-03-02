@@ -39,5 +39,5 @@ func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 	))
-	log.Fatal("Hailo", "Error in API Server: %v", err)
+	log.Fatal("Kentix", "Error in API Server: %v", err)
 }

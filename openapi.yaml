@@ -21,9 +21,7 @@ info:
   description: API to access and configure the Kentix app
 externalDocs:
   description: Find out more about the Kentix app
-  url: https://github.com/eliona-smart-building-assistant/app-template
-servers:
-  - url: http://template/v1
+  url: https://github.com/eliona-smart-building-assistant/kentix-app
 
 tags:
   - name: Configuration

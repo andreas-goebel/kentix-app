@@ -26,7 +26,7 @@ FROM alpine:3.15 AS target
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
 
-ENV APPNAME=template
+ENV APPNAME=kentix
 
 ENV TZ=Europe/Zurich
 CMD [ "/app" ]
