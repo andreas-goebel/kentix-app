@@ -87,7 +87,7 @@ components:
           description: Kentix API key
         enable:
           type: boolean
-          description: Flag to enable or disable the device
+          description: Flag to enable or disable fetching from this device
           default: true
           nullable: true
         refreshInterval:
@@ -120,10 +120,10 @@ components:
       properties:
         projectID:
           type: integer
-          description: The project ID this asset is assigned to.
+          description: The project ID this asset is assigned to
         assetID:
           type: integer
-          description: ID of a parent asset which groups all device assets
+          description: Eliona asset ID
           nullable: true
         serialNumber:
           type: string

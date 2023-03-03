@@ -21,7 +21,7 @@ type Configuration struct {
 	// Kentix API key
 	ApiKey string `json:"apiKey,omitempty"`
 
-	// Flag to enable or disable the device
+	// Flag to enable or disable fetching from this device
 	Enable *bool `json:"enable,omitempty"`
 
 	// Interval in seconds for collecting data from device

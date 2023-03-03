@@ -12,10 +12,10 @@ package apiserver
 // Sensor - Each sensor represents one asset in Eliona.
 type Sensor struct {
 
-	// The project ID this asset is assigned to.
+	// The project ID this asset is assigned to
 	ProjectID int32 `json:"projectID,omitempty"`
 
-	// ID of a parent asset which groups all device assets
+	// Eliona asset ID
 	AssetID *int32 `json:"assetID,omitempty"`
 
 	// Serial number reported by the Kentix device
