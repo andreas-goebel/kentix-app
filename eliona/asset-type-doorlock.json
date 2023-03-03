@@ -1,0 +1,43 @@
+{
+	"attributes": [
+		{
+			"enable": true,
+			"name": "serial_number",
+			"subtype": "info",
+			"translation": {
+				"de": "Seriennummer",
+				"en": "Serial number"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "name",
+			"subtype": "info",
+			"translation": {
+				"de": "Name",
+				"en": "Name"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "door_contact",
+			"subtype": "input",
+			"translation": {
+				"de": "Türkontakt",
+				"en": "Door contact"
+			},
+			"type": "device-status",
+		},
+	],
+	"custom": true,
+	"icon": "lock",
+	"name": "Kentix Doorlock",
+	"translation": {
+		"de": "Türschloss",
+		"en": "Doorlock"
+	},
+	"urldoc": "https://kentix.com/transfer/api/accessmanager",
+	"vendor": "Kentix"
+}

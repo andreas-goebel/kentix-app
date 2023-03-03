@@ -1,0 +1,210 @@
+{
+	"attributes": [
+		{
+			"enable": true,
+			"name": "ip_address",
+			"subtype": "info",
+			"translation": {
+				"de": "IP Addresse",
+				"en": "IP Address"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "mac_address",
+			"subtype": "info",
+			"translation": {
+				"de": "MAC Addresse",
+				"en": "MAC Address"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "firmware_version",
+			"subtype": "info",
+			"translation": {
+				"de": "Firmware version",
+				"en": "Firmware version"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "power_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Stromsabotage",
+				"en": "Power sabotage"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "connection_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Anschluss-Sabotage",
+				"en": "Connection sabotage"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "internal_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Interne Sabotage",
+				"en": "Internal sabotage"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "internal_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Interne Sabotage",
+				"en": "Internal sabotage"
+			},
+			"type": "device-info",
+		},
+
+		{
+			"enable": true,
+			"name": "temperature",
+			"subtype": "input",
+			"translation": {
+				"de": "Temperatur",
+				"en": "Temperature"
+			},
+			"type": "device-status",
+			"unit": "˚C",
+		},
+		{
+			"enable": true,
+			"name": "humidity",
+			"subtype": "input",
+			"translation": {
+				"de": "Luftfeuchtigkeit",
+				"en": "Humidity"
+			},
+			"type": "device-status",
+			"unit": "%",
+		},
+		{
+			"enable": true,
+			"name": "dew_point",
+			"subtype": "input",
+			"translation": {
+				"de": "Taupunkt",
+				"en": "Dew point"
+			},
+			"type": "device-status",
+			"unit": "˚C",
+		},
+		{
+			"enable": true,
+			"name": "air_pressure",
+			"subtype": "input",
+			"translation": {
+				"de": "Luftdruck",
+				"en": "Air pressure"
+			},
+			"type": "device-status",
+			"unit": "hPa",
+		},
+		{
+			"enable": true,
+			"name": "air_quality",
+			"subtype": "input",
+			"translation": {
+				"de": "Luftqualität",
+				"en": "Air quality"
+			},
+			"type": "device-status",
+		},
+		{
+			"enable": true,
+			"name": "co2",
+			"subtype": "input",
+			"translation": {
+				"de": "CO₂",
+				"en": "CO₂"
+			},
+			"type": "device-status",
+			"unit": "ppm",
+		},
+		{
+			"enable": true,
+			"name": "co",
+			"subtype": "input",
+			"translation": {
+				"de": "CO",
+				"en": "CO"
+			},
+			"type": "device-status",
+			"unit": "ppm",
+		},
+		{
+			"enable": true,
+			"name": "heat",
+			"subtype": "input",
+			"translation": {
+				"de": "CO₂",
+				"en": "CO₂"
+			},
+			"type": "device-status",
+		},
+		{
+			"enable": true,
+			"name": "ti",
+			"subtype": "input",
+			"translation": {
+				"de": "Wärmebild",
+				"en": "Thermal imaging"
+			},
+			"type": "device-status",
+		},
+		{
+			"enable": true,
+			"name": "motion",
+			"subtype": "input",
+			"translation": {
+				"de": "Bewegung",
+				"en": "Motion"
+			},
+			"type": "device-status",
+		},
+		{
+			"enable": true,
+			"name": "vibration",
+			"subtype": "input",
+			"translation": {
+				"de": "Vibration",
+				"en": "Vibration"
+			},
+			"type": "device-status",
+		},
+		{
+			"enable": true,
+			"name": "people_count",
+			"subtype": "input",
+			"translation": {
+				"de": "Menschen zählen",
+				"en": "People count"
+			},
+			"type": "device-status",
+		},
+	],
+	"custom": true,
+	"icon": "x",
+	"name": "Kentix MultiSensor",
+	"translation": {
+		"de": "Sensoreinheit",
+		"en": "Sensor unit"
+	},
+	"urldoc": "https://kentix.com/transfer/api/multisensor",
+	"vendor": "Kentix"
+}

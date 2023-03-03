@@ -1,0 +1,73 @@
+{
+	"attributes": [
+		{
+			"enable": true,
+			"name": "ip_address",
+			"subtype": "info",
+			"translation": {
+				"de": "IP Addresse",
+				"en": "IP Address"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "mac_address",
+			"subtype": "info",
+			"translation": {
+				"de": "MAC Addresse",
+				"en": "MAC Address"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "firmware_version",
+			"subtype": "info",
+			"translation": {
+				"de": "Firmware version",
+				"en": "Firmware version"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "power_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Stromsabotage",
+				"en": "Power sabotage"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "connection_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Anschluss-Sabotage",
+				"en": "Connection sabotage"
+			},
+			"type": "device-info",
+		},
+		{
+			"enable": true,
+			"name": "internal_sabotage",
+			"subtype": "info",
+			"translation": {
+				"de": "Interne Sabotage",
+				"en": "Internal sabotage"
+			},
+			"type": "device-info",
+		},
+	],
+	"custom": true,
+	"icon": "bell",
+	"name": "Kentix AlarmManager",
+	"translation": {
+		"de": "Die zentrale Systemeinheit",
+		"en": "Central system unit"
+	},
+	"urldoc": "https://kentix.com/transfer/api/alarmmanager",
+	"vendor": "Kentix"
+}
