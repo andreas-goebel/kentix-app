@@ -13,8 +13,31 @@
 --  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 --  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-create schema if not exists template;
+create schema if not exists kentix;
 
---
--- Todo: create tables and database objects necessary for this app like tables persisting configuration
---
+-- Configuration corresponds to one Kentix device
+-- Should be editable by eliona frontend.
+create table if not exists kentix.configuration
+(
+	id               bigserial primary key,
+	address          text,
+	api_key          text,
+	enable           boolean default false,
+	refresh_interval integer not null default 60,
+	request_timeout  integer not null default 120,
+	active           boolean default false,
+	project_ids      text[]
+);
+
+-- Sensor corresponds to one asset in Eliona
+-- Should be read-only by eliona frontend.
+create table if not exists kentix.sensor
+(
+	id            bigserial primary key,
+	project_id    integer   not null,
+	asset_id      integer,
+	serial_number integer not null
+);
+
+-- Makes the new objects available for all other init steps
+commit;

@@ -16,11 +16,12 @@
 package main
 
 import (
+	"kentix/apiserver"
+	"kentix/apiservices"
+	"net/http"
+
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
-	"hailo/apiserver"
-	"hailo/apiservices"
-	"net/http"
 )
 
 // doAnything is the main app function which is called periodically
@@ -38,5 +39,5 @@ func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 	))
-	log.Fatal("Hailo", "Error in API Server: %v", err)
+	log.Fatal("Kentix", "Error in API Server: %v", err)
 }

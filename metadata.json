@@ -1,11 +1,11 @@
 {
   "displayName": {
-    "en": "App template",
-    "de": "App Vorlage"
+    "en": "Kentix app",
+    "de": "Kentix app"
   },
   "description": {
-    "en": "This template can be used to create an app stub for an Eliona environment.",
-    "de": "Diese Vorlage kann verwendet werden um eine App für Eliona zu erstellen."
+    "en": "The Kentix app allows access to Kentix devices.",
+    "de": "Die Kentix App ermöglicht den Zugriff auf Kentix Geräte."
   },
   "useEnvironment": [ "CONNECTION_STRING", "API_ENDPOINT", "API_TOKEN" ]
 }
