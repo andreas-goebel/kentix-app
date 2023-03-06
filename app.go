@@ -18,6 +18,7 @@ package main
 import (
 	"kentix/apiserver"
 	"kentix/apiservices"
+	"kentix/kentix"
 	"net/http"
 
 	"github.com/eliona-smart-building-assistant/go-utils/common"
@@ -26,11 +27,11 @@ import (
 
 // doAnything is the main app function which is called periodically
 func doAnything() {
-
-	//
-	// Todo: implement everything the app should do
-	//
-
+	am, err := kentix.GetAccessManager(apiserver.Configuration{Address: "http://localhost:3031"})
+	if err != nil {
+		log.Printf(log.ErrorLevel, "Kentix", "%v", err)
+	}
+	log.Printf(log.InfoLevel, "Kentix", "%+v", am)
 }
 
 // listenApiRequests starts an API server and listen for API requests
