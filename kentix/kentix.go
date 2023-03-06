@@ -18,10 +18,12 @@ package kentix
 import (
 	"io"
 	"kentix/apiserver"
+	"log"
 
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type AccessManagerInfoResponse struct {
@@ -56,7 +58,11 @@ type MasterSlave struct {
 func GetAccessManager(conf apiserver.Configuration) (*AccessManager, error) {
 	client := &http.Client{}
 
-	req, err := http.NewRequest("GET", conf.Address+"/api/info", nil)
+	url, err := url.JoinPath(conf.Address, "api/info")
+	if err != nil {
+		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
+	}
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %v", err)
 	}
@@ -69,6 +75,8 @@ func GetAccessManager(conf apiserver.Configuration) (*AccessManager, error) {
 	if err != nil {
 		return nil, fmt.Errorf("reading response: %v", err)
 	}
+
+	log.Printf("%+v", string(body))
 
 	var accessManagerInfoResponse AccessManagerInfoResponse
 	err = json.Unmarshal(body, &accessManagerInfoResponse)

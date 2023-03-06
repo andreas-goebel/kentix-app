@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"kentix/conf"
 	"kentix/eliona"
 	"time"
@@ -47,9 +48,15 @@ func main() {
 	)
 
 	common.WaitFor(
-		common.Loop(doAnything, time.Second),
+		common.Loop(collectData, time.Second),
 		listenApiRequests,
 	)
+
+	// At the end set all configuration inactive
+	_, err := conf.SetAllConfigsInactive(context.Background())
+	if err != nil {
+		log.Error("Kentix", "setting all configs inactive: %v", err)
+	}
 
 	log.Info("Kentix", "Terminating the app.")
 }
