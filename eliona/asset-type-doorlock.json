@@ -8,7 +8,7 @@
 				"de": "Seriennummer",
 				"en": "Serial number"
 			},
-			"type": "device-info",
+			"type": "device-info"
 		},
 		{
 			"enable": true,
@@ -18,7 +18,7 @@
 				"de": "Name",
 				"en": "Name"
 			},
-			"type": "device-info",
+			"type": "device-info"
 		},
 		{
 			"enable": true,
@@ -28,8 +28,8 @@
 				"de": "Türkontakt",
 				"en": "Door contact"
 			},
-			"type": "device-status",
-		},
+			"type": "device-status"
+		}
 	],
 	"custom": true,
 	"icon": "lock",
