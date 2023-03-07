@@ -18,7 +18,6 @@ package kentix
 import (
 	"io"
 	"kentix/apiserver"
-	"log"
 
 	"encoding/json"
 	"fmt"
@@ -26,11 +25,11 @@ import (
 	"net/url"
 )
 
-type AccessManagerInfoResponse struct {
-	Data AccessManager `json:"data"`
+type InfoResponse struct {
+	Data DeviceInfo `json:"data"`
 }
 
-type AccessManager struct {
+type DeviceInfo struct {
 	Name        string      `json:"name"`
 	IPAddress   string      `json:"ip_address"`
 	MacAddress  string      `json:"mac_address"`
@@ -55,7 +54,7 @@ type MasterSlave struct {
 	MasterIP string `json:"master_ip"`
 }
 
-func GetAccessManager(conf apiserver.Configuration) (*AccessManager, error) {
+func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	client := &http.Client{}
 
 	url, err := url.JoinPath(conf.Address, "api/info")
@@ -76,13 +75,11 @@ func GetAccessManager(conf apiserver.Configuration) (*AccessManager, error) {
 		return nil, fmt.Errorf("reading response: %v", err)
 	}
 
-	log.Printf("%+v", string(body))
-
-	var accessManagerInfoResponse AccessManagerInfoResponse
-	err = json.Unmarshal(body, &accessManagerInfoResponse)
+	var infoResponse InfoResponse
+	err = json.Unmarshal(body, &infoResponse)
 	if err != nil {
 		return nil, fmt.Errorf("parsing response: %v", err)
 	}
 
-	return &accessManagerInfoResponse.Data, nil
+	return &infoResponse.Data, nil
 }

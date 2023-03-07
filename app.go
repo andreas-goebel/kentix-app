@@ -28,22 +28,13 @@ import (
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
-// collectData collects data based on the configured FDS endpoints in table hailo.config. For each FDS endpoint the
-// data is collected in a separate thread. These threads wait until the configured interval time is over. Afterwards
-// a new thread is started for this connection.
 func collectData() {
-
-	// Check if import or update of assets is requested
-
-	// Load all configured configs from table hailo.config.
 	configs, err := conf.GetConfigs(context.Background())
 	if len(configs) <= 0 || err != nil {
 		log.Fatal("Kentix", "Couldn't read config from configured database: %v", err)
 	}
 
-	// Start collection data for each config
 	for _, config := range configs {
-
 		// Skip config if disabled and set inactive
 		if !conf.IsConfigEnabled(config) {
 			if conf.IsConfigActive(config) {
@@ -52,7 +43,7 @@ func collectData() {
 			continue
 		}
 
-		// Signals, that this config is active
+		// Signals that this config is active
 		if !conf.IsConfigActive(config) {
 			conf.SetConfigActiveState(context.Background(), config, true)
 			log.Info("Kentix", "Collecting initialized with Configuration %d:\n"+
@@ -73,33 +64,34 @@ func collectData() {
 				*config.ProjectIDs)
 		}
 
+		// Otherwise it would get overwritten with each iteration.
+		cc := config
+
 		// Runs the ReadNode. If the current node is currently running, skip the execution
 		// After the execution sleeps the configured timeout. During this timeout no further
 		// process for this config is started to read the data.
 		common.RunOnce(func() {
+			log.Info("Kentix", "Collecting %d started", *cc.Id)
 
-			log.Info("Kentix", "Collecting %d started", *config.Id)
+			collectDataForConfig(cc)
 
-			collectDataForConfig(config)
+			log.Info("Kentix", "Collecting %d finished", *cc.Id)
 
-			log.Info("Kentix", "Collecting %d finished", *config.Id)
-
-			time.Sleep(time.Second * time.Duration(config.RefreshInterval))
-
-		}, config.Id)
+			time.Sleep(time.Second * time.Duration(cc.RefreshInterval))
+		}, *cc.Id)
 	}
 }
 
 func collectDataForConfig(config apiserver.Configuration) {
-	am, err := kentix.GetAccessManager(config)
+	am, err := kentix.GetDeviceInfo(config)
 	if err != nil {
 		log.Printf(log.ErrorLevel, "Kentix", "%v", err)
 	}
 	log.Printf(log.InfoLevel, "Kentix", "%+v", am)
 }
 
-// listenApiRequests starts an API server and listen for API requests
-// The API endpoints are defined in the openapi.yaml file
+// listenApiRequests starts an API server and listen for API requests.
+// The API endpoints are defined in the openapi.yaml file.
 func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
