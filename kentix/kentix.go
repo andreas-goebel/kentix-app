@@ -25,7 +25,13 @@ import (
 	"net/url"
 )
 
-type InfoResponse struct {
+const (
+	AccessPointDeviceType  = 1
+	AlarmManagerDeviceType = 8
+	MultiSensorDeviceType  = 110
+)
+
+type infoResponse struct {
 	Data DeviceInfo `json:"data"`
 }
 
@@ -59,9 +65,61 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
-	var infoResponse InfoResponse
+	var infoResponse infoResponse
 	err = fetchData(url, &infoResponse)
 	return &infoResponse.Data, err
+}
+
+type DigitalInput struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Input struct {
+		Value      string `json:"value"`
+		HasAlarm   bool   `json:"has_alarm"`
+		Unit       string `json:"unit"`
+		UnitPrefix string `json:"unit_prefix"`
+	} `json:"input"`
+}
+
+type SensorState struct {
+	HasAlarm bool `json:"has_alarm"`
+}
+
+type SensorValue struct {
+	Value    string `json:"value"`
+	HasAlarm bool   `json:"has_alarm"`
+}
+
+type SensorData struct {
+	ID          int         `json:"id"`
+	Name        string      `json:"name"`
+	State       SensorState `json:"state"`
+	Temperature SensorValue `json:"temperature"`
+	Humidity    SensorValue `json:"humidity"`
+	Dewpoint    SensorValue `json:"dewpoint"`
+	AirPressure SensorValue `json:"air_pressure"`
+	AirQuality  SensorValue `json:"air_quality"`
+	CO2         SensorValue `json:"co2"`
+	Heat        SensorValue `json:"heat"`
+	CO          SensorValue `json:"co"`
+	TI          SensorValue `json:"ti"`
+	Motion      SensorValue `json:"motion"`
+	Vibration   SensorValue `json:"vibration"`
+	PeopleCount SensorValue `json:"people_count"`
+}
+
+type sensorResponse struct {
+	Data SensorData `json:"data"`
+}
+
+func GetMultiSensorReadings(conf apiserver.Configuration) (*SensorData, error) {
+	url, err := url.JoinPath(conf.Address, "api/devices/multisensor/values")
+	if err != nil {
+		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
+	}
+	var sensorResponse sensorResponse
+	err = fetchData(url, &sensorResponse)
+	return &sensorResponse.Data, err
 }
 
 func fetchData(url string, dest interface{}) error {
@@ -69,21 +127,21 @@ func fetchData(url string, dest interface{}) error {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return  fmt.Errorf("creating request: %v", err)
+		return fmt.Errorf("creating request: %v", err)
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return  fmt.Errorf("sending request: %v", err)
+		return fmt.Errorf("sending request: %v", err)
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return  fmt.Errorf("reading response: %v", err)
+		return fmt.Errorf("reading response: %v", err)
 	}
 
 	err = json.Unmarshal(body, &dest)
 	if err != nil {
-		return  fmt.Errorf("parsing response: %v", err)
+		return fmt.Errorf("parsing response: %v", err)
 	}
 	return nil
 }

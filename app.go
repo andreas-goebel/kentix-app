@@ -83,11 +83,24 @@ func collectData() {
 }
 
 func collectDataForConfig(config apiserver.Configuration) {
-	am, err := kentix.GetDeviceInfo(config)
+	deviceInfo, err := kentix.GetDeviceInfo(config)
 	if err != nil {
-		log.Printf(log.ErrorLevel, "Kentix", "%v", err)
+		log.Error("Kentix", "getting device info: %v", err)
 	}
-	log.Printf(log.InfoLevel, "Kentix", "%+v", am)
+	log.Printf(log.InfoLevel, "Kentix", "%+v", deviceInfo)
+
+	// TODO: Verify that this is the correct property to determine device type.
+	switch deviceInfo.Type {
+	case kentix.AlarmManagerDeviceType:
+	case kentix.AccessPointDeviceType:
+		// TODO: To be implemented with continuous asset creation.
+	case kentix.MultiSensorDeviceType:
+		r, err := kentix.GetMultiSensorReadings(config)
+		if err != nil {
+			log.Error("Kentix", "getting MultiSensor readings: %v", err)
+		}
+		log.Info("Kentix", "%+v", r)
+	}
 }
 
 // listenApiRequests starts an API server and listen for API requests.
