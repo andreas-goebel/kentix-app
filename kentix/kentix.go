@@ -55,31 +55,35 @@ type MasterSlave struct {
 }
 
 func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
-	client := &http.Client{}
-
 	url, err := url.JoinPath(conf.Address, "api/info")
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
+	var infoResponse InfoResponse
+	err = fetchData(url, &infoResponse)
+	return &infoResponse.Data, err
+}
+
+func fetchData(url string, dest interface{}) error {
+	client := &http.Client{}
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("creating request: %v", err)
+		return  fmt.Errorf("creating request: %v", err)
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("sending request: %v", err)
+		return  fmt.Errorf("sending request: %v", err)
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("reading response: %v", err)
+		return  fmt.Errorf("reading response: %v", err)
 	}
 
-	var infoResponse InfoResponse
-	err = json.Unmarshal(body, &infoResponse)
+	err = json.Unmarshal(body, &dest)
 	if err != nil {
-		return nil, fmt.Errorf("parsing response: %v", err)
+		return  fmt.Errorf("parsing response: %v", err)
 	}
-
-	return &infoResponse.Data, nil
+	return nil
 }
