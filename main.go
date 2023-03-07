@@ -47,7 +47,7 @@ func main() {
 		eliona.InitEliona,
 	)
 
-	common.WaitFor(
+	common.WaitForWithOs(
 		common.Loop(collectData, time.Second),
 		listenApiRequests,
 	)
