@@ -33,10 +33,11 @@ create table if not exists kentix.configuration
 -- Should be read-only by eliona frontend.
 create table if not exists kentix.sensor
 (
-	id            bigserial primary key,
-	project_id    integer   not null,
-	asset_id      integer,
-	serial_number integer not null
+	id               bigserial primary key,
+	configuration_id bigserial references kentix.configuration(id),
+	project_id       text      not null,
+	asset_id         integer,
+	serial_number    text not null
 );
 
 -- Makes the new objects available for all other init steps

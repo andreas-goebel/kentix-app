@@ -25,9 +25,9 @@ import (
 )
 
 const (
-	AccessPointDeviceType  = 1
-	AlarmManagerDeviceType = 8
-	MultiSensorDeviceType  = 110
+	AccessPointAssetType  = "Kentix Accessmanager"
+	AlarmManagerAssetType = "Kentix AlarmManager"
+	MultiSensorAssetType  = "Kentix MultiSensor"
 )
 
 type infoResponse struct {
@@ -39,6 +39,7 @@ type DeviceInfo struct {
 	IPAddress   string      `json:"ip_address"`
 	MacAddress  string      `json:"mac_address"`
 	Type        int         `json:"type"`
+	AssetType   string      `json:"-"`
 	Serial      string      `json:"serial"`
 	Version     VersionInfo `json:"version"`
 	OSRevision  int         `json:"os_revision"`
@@ -72,7 +73,24 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
+	infoResponse.Data.AssetType, err = inferAssetType(infoResponse.Data.Type)
+	if err != nil {
+		return nil, fmt.Errorf("inferring asset type from %s: %v", url, err)
+	}
 	return &infoResponse.Data, nil
+}
+
+func inferAssetType(typ int) (string, error) {
+	// TODO: Verify that this is the correct property to determine device type.
+	switch typ {
+	case 1:
+		return AccessPointAssetType, nil
+	case 8:
+		return AlarmManagerAssetType, nil
+	case 110:
+		return MultiSensorAssetType, nil
+	}
+	return "", fmt.Errorf("unknown device type: %v", typ)
 }
 
 type accessPointResponse struct {

@@ -20,6 +20,7 @@ import (
 	"kentix/apiserver"
 	"kentix/apiservices"
 	"kentix/conf"
+	"kentix/eliona"
 	"kentix/kentix"
 	"net/http"
 	"time"
@@ -90,16 +91,20 @@ func collectDataForConfig(config apiserver.Configuration) {
 	}
 	log.Printf(log.DebugLevel, "kentix", "%+v", deviceInfo)
 
-	// TODO: Verify that this is the correct property to determine device type.
-	switch deviceInfo.Type {
-	case kentix.AlarmManagerDeviceType:
-	case kentix.AccessPointDeviceType:
+	err = eliona.CreateAssetsIfNecessary(config, *deviceInfo)
+	if err != nil {
+		log.Error("eliona", "creating assets: %v", err)
+	}
+
+	switch deviceInfo.AssetType {
+	case kentix.AlarmManagerAssetType:
+	case kentix.AccessPointAssetType:
 		r, err := kentix.GetAccessPointReadings(config)
 		if err != nil {
 			log.Error("kentix", "getting AccessPoint readings: %v", err)
 		}
 		log.Debug("kentix", "%+v", r)
-	case kentix.MultiSensorDeviceType:
+	case kentix.MultiSensorAssetType:
 		r, err := kentix.GetMultiSensorReadings(config)
 		if err != nil {
 			log.Error("kentix", "getting MultiSensor readings: %v", err)

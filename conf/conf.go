@@ -85,12 +85,31 @@ func GetConfigs(ctx context.Context) ([]apiserver.Configuration, error) {
 	return apiConfigs, nil
 }
 
+func GetAssetId(ctx context.Context, config apiserver.Configuration, projId string, deviceId string) (*int32, error) {
+	dbAssets, err := dbkentix.Sensors(
+		dbkentix.SensorWhere.ConfigurationID.EQ(null.Int64FromPtr(config.Id).Int64),
+		dbkentix.SensorWhere.ProjectID.EQ(projId),
+		dbkentix.SensorWhere.SerialNumber.EQ(deviceId),
+	).All(ctx, db.Database(appname))
+	if err != nil || len(dbAssets) == 0 {
+		return nil, err
+	}
+	return common.Ptr(int32(dbAssets[0].ID)), nil
+}
+
 func SetConfigActiveState(ctx context.Context, config apiserver.Configuration, state bool) (int64, error) {
 	return dbkentix.Configurations(
 		dbkentix.ConfigurationWhere.ID.EQ(null.Int64FromPtr(config.Id).Int64),
 	).UpdateAll(ctx, db.Database(appname), dbkentix.M{
 		dbkentix.ConfigurationColumns.Active: state,
 	})
+}
+
+func ProjIds(config apiserver.Configuration) []string {
+	if config.ProjectIDs == nil {
+		return []string{}
+	}
+	return *config.ProjectIDs
 }
 
 func IsConfigActive(config apiserver.Configuration) bool {
