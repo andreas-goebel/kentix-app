@@ -31,7 +31,7 @@ import (
 func collectData() {
 	configs, err := conf.GetConfigs(context.Background())
 	if len(configs) <= 0 || err != nil {
-		log.Fatal("Kentix", "Couldn't read config from configured database: %v", err)
+		log.Fatal("conf", "Couldn't read config from configured database: %v", err)
 	}
 
 	for _, config := range configs {
@@ -46,7 +46,7 @@ func collectData() {
 		// Signals that this config is active
 		if !conf.IsConfigActive(config) {
 			conf.SetConfigActiveState(context.Background(), config, true)
-			log.Info("Kentix", "Collecting initialized with Configuration %d:\n"+
+			log.Info("conf", "Collecting initialized with Configuration %d:\n"+
 				"Address: %s\n"+
 				"API Key: %s\n"+
 				"Enable: %t\n"+
@@ -71,11 +71,11 @@ func collectData() {
 		// After the execution sleeps the configured timeout. During this timeout no further
 		// process for this config is started to read the data.
 		common.RunOnce(func() {
-			log.Info("Kentix", "Collecting %d started", *cc.Id)
+			log.Info("main", "Collecting %d started", *cc.Id)
 
 			collectDataForConfig(cc)
 
-			log.Info("Kentix", "Collecting %d finished", *cc.Id)
+			log.Info("main", "Collecting %d finished", *cc.Id)
 
 			time.Sleep(time.Second * time.Duration(cc.RefreshInterval))
 		}, *cc.Id)
@@ -85,10 +85,10 @@ func collectData() {
 func collectDataForConfig(config apiserver.Configuration) {
 	deviceInfo, err := kentix.GetDeviceInfo(config)
 	if err != nil {
-		log.Error("Kentix", "getting device info: %v", err)
+		log.Error("kentix", "getting device info: %v", err)
 		return
 	}
-	log.Printf(log.InfoLevel, "Kentix", "%+v", deviceInfo)
+	log.Printf(log.DebugLevel, "kentix", "%+v", deviceInfo)
 
 	// TODO: Verify that this is the correct property to determine device type.
 	switch deviceInfo.Type {
@@ -96,15 +96,15 @@ func collectDataForConfig(config apiserver.Configuration) {
 	case kentix.AccessPointDeviceType:
 		r, err := kentix.GetAccessPointReadings(config)
 		if err != nil {
-			log.Error("Kentix", "getting AccessPoint readings: %v", err)
+			log.Error("kentix", "getting AccessPoint readings: %v", err)
 		}
-		log.Info("Kentix", "%+v", r)
+		log.Debug("kentix", "%+v", r)
 	case kentix.MultiSensorDeviceType:
 		r, err := kentix.GetMultiSensorReadings(config)
 		if err != nil {
-			log.Error("Kentix", "getting MultiSensor readings: %v", err)
+			log.Error("kentix", "getting MultiSensor readings: %v", err)
 		}
-		log.Info("Kentix", "%+v", r)
+		log.Debug("kentix", "%+v", r)
 	}
 }
 
@@ -114,5 +114,5 @@ func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 	))
-	log.Fatal("Kentix", "Error in API Server: %v", err)
+	log.Fatal("main", "Error in API Server: %v", err)
 }
