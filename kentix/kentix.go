@@ -75,6 +75,64 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	return &infoResponse.Data, nil
 }
 
+type accessPointResponse struct {
+	Data  []DoorLock     `json:"data"`
+	Links PaginationLink `json:"links"`
+}
+
+type DoorLock struct {
+	ID                    int    `json:"id"`
+	Name                  string `json:"name"`
+	Serial                string `json:"serial"`
+	Active                bool   `json:"active"`
+	Default               bool   `json:"default"`
+	Address               string `json:"address"`
+	Type                  string `json:"type"`
+	DoubleAuth            int    `json:"double_auth"`
+	CoupleTime            int    `json:"couple_time"`
+	SwitchAlarmZone       string `json:"switch_alarmzone"`
+	TimeControlled        bool   `json:"time_controlled"`
+	TimeControlledBooking bool   `json:"time_controlled_booking"`
+	TimeProfileID         int    `json:"timeprofile_id"`
+	SwitchOutput          int    `json:"switch_output"`
+	SwitchExternal        int    `json:"switch_external"`
+	CameraID              int    `json:"camera_id"`
+	DoorContact           int    `json:"door_contact"`
+	AlarmDelay            int    `json:"alarm_delay"`
+}
+
+type PaginationLink struct {
+	Next string `json:"next"`
+}
+
+func GetAccessPointReadings(conf apiserver.Configuration) ([]DoorLock, error) {
+	url, err := url.JoinPath(conf.Address, "api/devices/doorlocks")
+	if err != nil {
+		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
+	}
+	return fetchDoorlocks(url, conf)
+}
+
+func fetchDoorlocks(url string, conf apiserver.Configuration) ([]DoorLock, error) {
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("creating request to %s: %v", url, err)
+	}
+	accessPointResponse, err := http.Read[accessPointResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	if err != nil {
+		return nil, fmt.Errorf("reading response from %s: %v", url, err)
+	}
+	doorlocks := accessPointResponse.Data
+	if accessPointResponse.Links.Next != "" {
+		dl, err := fetchDoorlocks(accessPointResponse.Links.Next, conf)
+		if err != nil {
+			return nil, err
+		}
+		doorlocks = append(doorlocks, dl...)
+	}
+	return doorlocks, nil
+}
+
 type DigitalInput struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
