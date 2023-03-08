@@ -16,13 +16,12 @@
 package kentix
 
 import (
-	"io"
-	"kentix/apiserver"
-
-	"encoding/json"
 	"fmt"
-	"net/http"
+	"kentix/apiserver"
 	"net/url"
+	"time"
+
+	"github.com/eliona-smart-building-assistant/go-utils/http"
 )
 
 const (
@@ -65,9 +64,15 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
-	var infoResponse infoResponse
-	err = fetchData(url, &infoResponse)
-	return &infoResponse.Data, err
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
+	if err != nil {
+		return nil, fmt.Errorf("creating request to %s: %v", url, err)
+	}
+	infoResponse, err := http.Read[infoResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	if err != nil {
+		return nil, fmt.Errorf("reading response from %s: %v", url, err)
+	}
+	return &infoResponse.Data, nil
 }
 
 type DigitalInput struct {
@@ -117,31 +122,13 @@ func GetMultiSensorReadings(conf apiserver.Configuration) (*SensorData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
-	var sensorResponse sensorResponse
-	err = fetchData(url, &sensorResponse)
-	return &sensorResponse.Data, err
-}
-
-func fetchData(url string, dest interface{}) error {
-	client := &http.Client{}
-
-	req, err := http.NewRequest("GET", url, nil)
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
 	if err != nil {
-		return fmt.Errorf("creating request: %v", err)
+		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	resp, err := client.Do(req)
+	sensorResponse, err := http.Read[sensorResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
 	if err != nil {
-		return fmt.Errorf("sending request: %v", err)
+		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("reading response: %v", err)
-	}
-
-	err = json.Unmarshal(body, &dest)
-	if err != nil {
-		return fmt.Errorf("parsing response: %v", err)
-	}
-	return nil
+	return &sensorResponse.Data, nil
 }

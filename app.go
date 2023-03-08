@@ -86,6 +86,7 @@ func collectDataForConfig(config apiserver.Configuration) {
 	deviceInfo, err := kentix.GetDeviceInfo(config)
 	if err != nil {
 		log.Error("Kentix", "getting device info: %v", err)
+		return
 	}
 	log.Printf(log.InfoLevel, "Kentix", "%+v", deviceInfo)
 
