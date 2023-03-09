@@ -28,6 +28,7 @@ const (
 	AccessPointAssetType  = "Kentix Accessmanager"
 	AlarmManagerAssetType = "Kentix AlarmManager"
 	MultiSensorAssetType  = "Kentix MultiSensor"
+	DoorlockAssetType     = "Kentix Doorlock"
 )
 
 type infoResponse struct {

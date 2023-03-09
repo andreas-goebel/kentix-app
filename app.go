@@ -99,11 +99,16 @@ func collectDataForConfig(config apiserver.Configuration) {
 	switch deviceInfo.AssetType {
 	case kentix.AlarmManagerAssetType:
 	case kentix.AccessPointAssetType:
-		r, err := kentix.GetAccessPointReadings(config)
+		doorlocks, err := kentix.GetAccessPointReadings(config)
 		if err != nil {
 			log.Error("kentix", "getting AccessPoint readings: %v", err)
 		}
-		log.Debug("kentix", "%+v", r)
+		for _, doorlock := range doorlocks {
+			err = eliona.CreateDoorlockAssetsIfNecessary(config, doorlock)
+			if err != nil {
+				log.Error("eliona", "creating doorlock assets: %v", err)
+			}
+		}
 	case kentix.MultiSensorAssetType:
 		r, err := kentix.GetMultiSensorReadings(config)
 		if err != nil {
