@@ -16,16 +16,21 @@
 package conf
 
 import (
+	"context"
+	"kentix/apiserver"
+
+	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 )
 
-// InitConfiguration initialize the configuration of the app
+// InitConfiguration creates a default configuration to demonstrate how the eliona app should be configured. This configuration
+// points to a not existing endpoint and has to be changed.
 func InitConfiguration(connection db.Connection) error {
-
-	//
-	// Todo: do anything which is necessary to initialize the app like creating text data to demonstrate the configuration
-	//
-
-	return nil
-
+	_, err := InsertConfig(context.Background(), apiserver.Configuration{
+		Address:         "https://example.com",
+		ApiKey:          "ikcsjhzrflwz5",
+		Enable:          common.Ptr(true),
+		RefreshInterval: 30,
+	})
+	return err
 }

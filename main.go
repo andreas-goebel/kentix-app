@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"kentix/conf"
 	"kentix/eliona"
 	"time"
@@ -30,7 +31,7 @@ import (
 // The main function starts the app by starting all services necessary for this app and waits
 // until all services are finished.
 func main() {
-	log.Info("Kentix", "Starting the app.")
+	log.Info("main", "Starting the app.")
 
 	// Necessary to close used init resources, because db.Pool() is used in this app.
 	defer db.ClosePool()
@@ -46,10 +47,16 @@ func main() {
 		eliona.InitEliona,
 	)
 
-	common.WaitFor(
-		common.Loop(doAnything, time.Second),
+	common.WaitForWithOs(
+		common.Loop(collectData, time.Second),
 		listenApiRequests,
 	)
 
-	log.Info("Kentix", "Terminating the app.")
+	// At the end set all configuration inactive
+	_, err := conf.SetAllConfigsInactive(context.Background())
+	if err != nil {
+		log.Error("conf", "setting all configs inactive: %v", err)
+	}
+
+	log.Info("main", "Terminating the app.")
 }

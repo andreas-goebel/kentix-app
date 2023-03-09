@@ -16,28 +16,103 @@
 package main
 
 import (
+	"context"
 	"kentix/apiserver"
 	"kentix/apiservices"
+	"kentix/conf"
+	"kentix/kentix"
 	"net/http"
+	"time"
 
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
-// doAnything is the main app function which is called periodically
-func doAnything() {
+func collectData() {
+	configs, err := conf.GetConfigs(context.Background())
+	if len(configs) <= 0 || err != nil {
+		log.Fatal("conf", "Couldn't read config from configured database: %v", err)
+	}
 
-	//
-	// Todo: implement everything the app should do
-	//
+	for _, config := range configs {
+		// Skip config if disabled and set inactive
+		if !conf.IsConfigEnabled(config) {
+			if conf.IsConfigActive(config) {
+				conf.SetConfigActiveState(context.Background(), config, false)
+			}
+			continue
+		}
 
+		// Signals that this config is active
+		if !conf.IsConfigActive(config) {
+			conf.SetConfigActiveState(context.Background(), config, true)
+			log.Info("conf", "Collecting initialized with Configuration %d:\n"+
+				"Address: %s\n"+
+				"API Key: %s\n"+
+				"Enable: %t\n"+
+				"Refresh Interval: %d\n"+
+				"Request Timeout: %d\n"+
+				"Active: %t\n"+
+				"Project IDs: %v\n",
+				*config.Id,
+				config.Address,
+				config.ApiKey,
+				*config.Enable,
+				config.RefreshInterval,
+				*config.RequestTimeout,
+				*config.Active,
+				*config.ProjectIDs)
+		}
+
+		// Otherwise it would get overwritten with each iteration.
+		cc := config
+
+		// Runs the ReadNode. If the current node is currently running, skip the execution
+		// After the execution sleeps the configured timeout. During this timeout no further
+		// process for this config is started to read the data.
+		common.RunOnce(func() {
+			log.Info("main", "Collecting %d started", *cc.Id)
+
+			collectDataForConfig(cc)
+
+			log.Info("main", "Collecting %d finished", *cc.Id)
+
+			time.Sleep(time.Second * time.Duration(cc.RefreshInterval))
+		}, *cc.Id)
+	}
 }
 
-// listenApiRequests starts an API server and listen for API requests
-// The API endpoints are defined in the openapi.yaml file
+func collectDataForConfig(config apiserver.Configuration) {
+	deviceInfo, err := kentix.GetDeviceInfo(config)
+	if err != nil {
+		log.Error("kentix", "getting device info: %v", err)
+		return
+	}
+	log.Printf(log.DebugLevel, "kentix", "%+v", deviceInfo)
+
+	// TODO: Verify that this is the correct property to determine device type.
+	switch deviceInfo.Type {
+	case kentix.AlarmManagerDeviceType:
+	case kentix.AccessPointDeviceType:
+		r, err := kentix.GetAccessPointReadings(config)
+		if err != nil {
+			log.Error("kentix", "getting AccessPoint readings: %v", err)
+		}
+		log.Debug("kentix", "%+v", r)
+	case kentix.MultiSensorDeviceType:
+		r, err := kentix.GetMultiSensorReadings(config)
+		if err != nil {
+			log.Error("kentix", "getting MultiSensor readings: %v", err)
+		}
+		log.Debug("kentix", "%+v", r)
+	}
+}
+
+// listenApiRequests starts an API server and listen for API requests.
+// The API endpoints are defined in the openapi.yaml file.
 func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
 	))
-	log.Fatal("Kentix", "Error in API Server: %v", err)
+	log.Fatal("main", "Error in API Server: %v", err)
 }
