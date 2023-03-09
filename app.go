@@ -94,7 +94,11 @@ func collectDataForConfig(config apiserver.Configuration) {
 	switch deviceInfo.Type {
 	case kentix.AlarmManagerDeviceType:
 	case kentix.AccessPointDeviceType:
-		// TODO: To be implemented with continuous asset creation.
+		r, err := kentix.GetAccessPointReadings(config)
+		if err != nil {
+			log.Error("Kentix", "getting AccessPoint readings: %v", err)
+		}
+		log.Info("Kentix", "%+v", r)
 	case kentix.MultiSensorDeviceType:
 		r, err := kentix.GetMultiSensorReadings(config)
 		if err != nil {
