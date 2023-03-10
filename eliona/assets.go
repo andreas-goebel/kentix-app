@@ -99,7 +99,7 @@ func createAssetIfNecessary(d assetData) error {
 		Name:                    *api.NewNullableString(common.Ptr(d.name)),
 		AssetType:               d.assetType,
 		Description:             *api.NewNullableString(common.Ptr(d.description)),
-		ParentLocationalAssetId: *api.NewNullableInt32(d.parentAssetId),
+		ParentFunctionalAssetId: *api.NewNullableInt32(d.parentAssetId),
 	})
 	if err != nil {
 		return fmt.Errorf("upserting asset into Eliona: %v", err)
