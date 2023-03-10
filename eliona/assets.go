@@ -109,7 +109,7 @@ func createAssetIfNecessary(d assetData) error {
 	}
 
 	// Remember the asset id for further usage
-	if err := conf.InsertAsset(context.Background(), d.config, d.projectId, d.identifier, *newId); err != nil {
+	if err := conf.InsertSensor(context.Background(), d.config, d.projectId, d.identifier, *newId); err != nil {
 		return fmt.Errorf("inserting asset to config db: %v", err)
 	}
 

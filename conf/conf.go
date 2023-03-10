@@ -97,13 +97,13 @@ func GetAssetId(ctx context.Context, config apiserver.Configuration, projId stri
 	return common.Ptr(int32(dbAssets[0].ID)), nil
 }
 
-func InsertAsset(ctx context.Context, config apiserver.Configuration, projId string, SerialNumber string, assetId int32) error {
-	var dbAsset dbkentix.Sensor
-	dbAsset.ConfigurationID = null.Int64FromPtr(config.Id).Int64
-	dbAsset.ProjectID = projId
-	dbAsset.SerialNumber = SerialNumber
-	dbAsset.AssetID = null.Int32From(assetId)
-	return dbAsset.Insert(ctx, db.Database(appname), boil.Infer())
+func InsertSensor(ctx context.Context, config apiserver.Configuration, projId string, SerialNumber string, assetId int32) error {
+	var dbSensor dbkentix.Sensor
+	dbSensor.ConfigurationID = null.Int64FromPtr(config.Id).Int64
+	dbSensor.ProjectID = projId
+	dbSensor.SerialNumber = SerialNumber
+	dbSensor.AssetID = null.Int32From(assetId)
+	return dbSensor.Insert(ctx, db.Database(appname), boil.Infer())
 }
 
 func SetConfigActiveState(ctx context.Context, config apiserver.Configuration, state bool) (int64, error) {
