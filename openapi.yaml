@@ -119,8 +119,10 @@ components:
       description: Each sensor represents one asset in Eliona.
       properties:
         projectID:
-          type: integer
+          type: string
           description: The project ID this asset is assigned to
+        configuration:
+          $ref: '#/components/schemas/Configuration'
         assetID:
           type: integer
           description: Eliona asset ID

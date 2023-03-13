@@ -13,7 +13,9 @@ package apiserver
 type Sensor struct {
 
 	// The project ID this asset is assigned to
-	ProjectID int32 `json:"projectID,omitempty"`
+	ProjectID string `json:"projectID,omitempty"`
+
+	Configuration Configuration `json:"configuration,omitempty"`
 
 	// Eliona asset ID
 	AssetID *int32 `json:"assetID,omitempty"`
@@ -24,6 +26,9 @@ type Sensor struct {
 
 // AssertSensorRequired checks if the required fields are not zero-ed
 func AssertSensorRequired(obj Sensor) error {
+	if err := AssertConfigurationRequired(obj.Configuration); err != nil {
+		return err
+	}
 	return nil
 }
 

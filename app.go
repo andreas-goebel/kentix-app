@@ -31,8 +31,13 @@ import (
 
 func collectData() {
 	configs, err := conf.GetConfigs(context.Background())
-	if len(configs) <= 0 || err != nil {
-		log.Fatal("conf", "Couldn't read config from configured database: %v", err)
+	if err != nil {
+		log.Fatal("conf", "Couldn't read configs from DB: %v", err)
+		return
+	}
+	if len(configs) == 0 {
+		log.Fatal("conf", "No configs in DB")
+		return
 	}
 
 	for _, config := range configs {
@@ -91,9 +96,14 @@ func collectDataForConfig(config apiserver.Configuration) {
 	}
 	log.Printf(log.DebugLevel, "kentix", "%+v", deviceInfo)
 
-	err = eliona.CreateAssetsIfNecessary(config, *deviceInfo)
-	if err != nil {
+	if err := eliona.CreateAssetsIfNecessary(config, *deviceInfo); err != nil {
 		log.Error("eliona", "creating assets: %v", err)
+		return
+	}
+
+	if err := eliona.UpsertDeviceInfo(config, *deviceInfo); err != nil {
+		log.Error("eliona", "inserting device info: %v", err)
+		return
 	}
 
 	switch deviceInfo.AssetType {
@@ -102,19 +112,28 @@ func collectDataForConfig(config apiserver.Configuration) {
 		doorlocks, err := kentix.GetAccessPointReadings(config)
 		if err != nil {
 			log.Error("kentix", "getting AccessPoint readings: %v", err)
+			return
 		}
 		for _, doorlock := range doorlocks {
-			err = eliona.CreateDoorlockAssetsIfNecessary(config, doorlock)
-			if err != nil {
+			if err := eliona.CreateDoorlockAssetsIfNecessary(config, doorlock); err != nil {
 				log.Error("eliona", "creating doorlock assets: %v", err)
+				return
+			}
+			if err := eliona.UpsertDoorlockData(config, doorlock); err != nil {
+				log.Error("eliona", "inserting doorlock data: %v", err)
+				return
 			}
 		}
 	case kentix.MultiSensorAssetType:
-		r, err := kentix.GetMultiSensorReadings(config)
+		sensor, err := kentix.GetMultiSensorReadings(config)
 		if err != nil {
 			log.Error("kentix", "getting MultiSensor readings: %v", err)
+			return
 		}
-		log.Debug("kentix", "%+v", r)
+		if err := eliona.UpsertMultiSensorData(config, *sensor); err != nil {
+			log.Error("eliona", "inserting MultiSensor data: %v", err)
+			return
+		}
 	}
 }
 
