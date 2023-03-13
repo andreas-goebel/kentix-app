@@ -236,15 +236,26 @@ var ConfigurationWhere = struct {
 
 // ConfigurationRels is where relationship names are stored.
 var ConfigurationRels = struct {
-}{}
+	Sensors string
+}{
+	Sensors: "Sensors",
+}
 
 // configurationR is where relationships are stored.
 type configurationR struct {
+	Sensors SensorSlice `boil:"Sensors" json:"Sensors" toml:"Sensors" yaml:"Sensors"`
 }
 
 // NewStruct creates a new relationship struct
 func (*configurationR) NewStruct() *configurationR {
 	return &configurationR{}
+}
+
+func (r *configurationR) GetSensors() SensorSlice {
+	if r == nil {
+		return nil
+	}
+	return r.Sensors
 }
 
 // configurationL is where Load methods for each relationship are stored.
@@ -554,6 +565,196 @@ func (q configurationQuery) Exists(ctx context.Context, exec boil.ContextExecuto
 	}
 
 	return count > 0, nil
+}
+
+// Sensors retrieves all the sensor's Sensors with an executor.
+func (o *Configuration) Sensors(mods ...qm.QueryMod) sensorQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"kentix\".\"sensor\".\"configuration_id\"=?", o.ID),
+	)
+
+	return Sensors(queryMods...)
+}
+
+// LoadSensors allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (configurationL) LoadSensors(ctx context.Context, e boil.ContextExecutor, singular bool, maybeConfiguration interface{}, mods queries.Applicator) error {
+	var slice []*Configuration
+	var object *Configuration
+
+	if singular {
+		var ok bool
+		object, ok = maybeConfiguration.(*Configuration)
+		if !ok {
+			object = new(Configuration)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeConfiguration)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeConfiguration))
+			}
+		}
+	} else {
+		s, ok := maybeConfiguration.(*[]*Configuration)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeConfiguration)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeConfiguration))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &configurationR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &configurationR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`kentix.sensor`),
+		qm.WhereIn(`kentix.sensor.configuration_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load sensor")
+	}
+
+	var resultSlice []*Sensor
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice sensor")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on sensor")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for sensor")
+	}
+
+	if len(sensorAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.Sensors = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &sensorR{}
+			}
+			foreign.R.Configuration = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.ConfigurationID {
+				local.R.Sensors = append(local.R.Sensors, foreign)
+				if foreign.R == nil {
+					foreign.R = &sensorR{}
+				}
+				foreign.R.Configuration = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// AddSensorsG adds the given related objects to the existing relationships
+// of the configuration, optionally inserting them as new records.
+// Appends related to o.R.Sensors.
+// Sets related.R.Configuration appropriately.
+// Uses the global database handle.
+func (o *Configuration) AddSensorsG(ctx context.Context, insert bool, related ...*Sensor) error {
+	return o.AddSensors(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddSensors adds the given related objects to the existing relationships
+// of the configuration, optionally inserting them as new records.
+// Appends related to o.R.Sensors.
+// Sets related.R.Configuration appropriately.
+func (o *Configuration) AddSensors(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Sensor) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.ConfigurationID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"kentix\".\"sensor\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"configuration_id"}),
+				strmangle.WhereClause("\"", "\"", 2, sensorPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.ConfigurationID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &configurationR{
+			Sensors: related,
+		}
+	} else {
+		o.R.Sensors = append(o.R.Sensors, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &sensorR{
+				Configuration: o,
+			}
+		} else {
+			rel.R.Configuration = o
+		}
+	}
+	return nil
 }
 
 // Configurations retrieves all the records using an executor.

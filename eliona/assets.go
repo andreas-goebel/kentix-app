@@ -15,6 +15,105 @@
 
 package eliona
 
-//
-// Todo: Define anything for eliona like writing assets or heap data
-//
+import (
+	"context"
+	"fmt"
+	"kentix/apiserver"
+	"kentix/conf"
+	"kentix/kentix"
+
+	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"
+	"github.com/eliona-smart-building-assistant/go-eliona/asset"
+	"github.com/eliona-smart-building-assistant/go-utils/common"
+	"github.com/eliona-smart-building-assistant/go-utils/log"
+)
+
+func CreateAssetsIfNecessary(config apiserver.Configuration, spec kentix.DeviceInfo) error {
+	for _, projectId := range conf.ProjIds(config) {
+		if err := createDeviceAssetIfNecessary(config, projectId, spec); err != nil {
+			return fmt.Errorf("creating assets for device %s: %v", spec.Serial, err)
+		}
+	}
+	return nil
+}
+
+func createDeviceAssetIfNecessary(config apiserver.Configuration, projectId string, spec kentix.DeviceInfo) error {
+	assetData := assetData{
+		config:        config,
+		projectId:     projectId,
+		parentAssetId: nil,
+		identifier:    spec.Serial,
+		assetType:     spec.AssetType,
+		name:          fmt.Sprintf("%s (%s)", spec.Name, spec.IPAddress),
+		description:   fmt.Sprintf("%s (%s)", spec.Name, spec.Serial),
+	}
+	return createAssetIfNecessary(assetData)
+}
+
+func CreateDoorlockAssetsIfNecessary(config apiserver.Configuration, spec kentix.DoorLock) error {
+	for _, projectId := range conf.ProjIds(config) {
+		// TODO: Implement parent asset ID for doorlocks?
+		if err := createDoorlockAssetIfNecessary(config, projectId, nil, spec); err != nil {
+			return fmt.Errorf("creating assets for device %s: %v", spec.Serial, err)
+		}
+	}
+	return nil
+}
+
+func createDoorlockAssetIfNecessary(config apiserver.Configuration, projectId string, parentAssetId *int32, spec kentix.DoorLock) error {
+	assetData := assetData{
+		config:        config,
+		projectId:     projectId,
+		parentAssetId: parentAssetId,
+		identifier:    spec.Serial,
+		assetType:     kentix.DoorlockAssetType,
+		name:          fmt.Sprintf("%s (%s)", spec.Name, spec.Address),
+		description:   fmt.Sprintf("%s (%s)", spec.Name, spec.Serial),
+	}
+	return createAssetIfNecessary(assetData)
+}
+
+type assetData struct {
+	config        apiserver.Configuration
+	projectId     string
+	parentAssetId *int32
+	identifier    string
+	assetType     string
+	name          string
+	description   string
+}
+
+func createAssetIfNecessary(d assetData) error {
+	// Get known asset id from configuration
+	assetID, err := conf.GetAssetId(context.Background(), d.config, d.projectId, d.identifier)
+	if err != nil {
+		return fmt.Errorf("finding asset ID: %v", err)
+	}
+	if assetID != nil {
+		return nil
+	}
+
+	newId, err := asset.UpsertAsset(api.Asset{
+		ProjectId:               d.projectId,
+		GlobalAssetIdentifier:   d.identifier,
+		Name:                    *api.NewNullableString(common.Ptr(d.name)),
+		AssetType:               d.assetType,
+		Description:             *api.NewNullableString(common.Ptr(d.description)),
+		ParentFunctionalAssetId: *api.NewNullableInt32(d.parentAssetId),
+	})
+	if err != nil {
+		return fmt.Errorf("upserting asset into Eliona: %v", err)
+	}
+	if newId == nil {
+		return fmt.Errorf("cannot create asset %s", d.name)
+	}
+
+	// Remember the asset id for further usage
+	if err := conf.InsertSensor(context.Background(), d.config, d.projectId, d.identifier, *newId); err != nil {
+		return fmt.Errorf("inserting asset to config db: %v", err)
+	}
+
+	log.Debug("eliona", "Created new asset for project %s and device %s.", d.projectId, d.identifier)
+
+	return nil
+}

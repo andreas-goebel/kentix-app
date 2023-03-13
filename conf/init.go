@@ -31,6 +31,7 @@ func InitConfiguration(connection db.Connection) error {
 		ApiKey:          "ikcsjhzrflwz5",
 		Enable:          common.Ptr(true),
 		RefreshInterval: 30,
+		ProjectIDs:      &[]string{"1", "2", "3"},
 	})
 	return err
 }
