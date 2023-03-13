@@ -11,9 +11,10 @@ package apiservices
 
 import (
 	"context"
-	"errors"
-	"kentix/apiserver"
 	"net/http"
+
+	"kentix/apiserver"
+	"kentix/conf"
 )
 
 // ConfigurationApiService is a service that implements the logic for the ConfigurationApiServicer
@@ -27,24 +28,19 @@ func NewConfigurationApiService() apiserver.ConfigurationApiServicer {
 	return &ConfigurationApiService{}
 }
 
-// GetExamples - Get example configuration
 func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
-	// TODO - update GetExamples with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+	configs, err := conf.GetConfigs(ctx)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusOK, configs), nil
 
-	//TODO: Uncomment the next line to return response Response(200, []Example{}) or use other options such as http.Ok ...
-	//return Response(200, []Example{}), nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GetExamples method not implemented")
 }
 
-// PostExample - Creates an example configuration
-func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, example apiserver.Configuration) (apiserver.ImplResponse, error) {
-	// TODO - update PostExample with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-
-	//TODO: Uncomment the next line to return response Response(201, Example{}) or use other options such as http.Ok ...
-	//return Response(201, Example{}), nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("PostExample method not implemented")
+func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, config apiserver.Configuration) (apiserver.ImplResponse, error) {
+	insertedConfig, err := conf.InsertConfig(ctx, config)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusCreated, insertedConfig), nil
 }

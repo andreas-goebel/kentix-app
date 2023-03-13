@@ -111,8 +111,8 @@ components:
           items:
             type: string
           example:
-            - 42
-            - 99
+            - "42"
+            - "99"
 
     Sensor:
       type: object
