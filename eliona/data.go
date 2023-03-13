@@ -101,11 +101,16 @@ func upsertDoorlockData(config apiserver.Configuration, projectId string, doorlo
 	)
 }
 
-func UpsertMultiSensorData(config apiserver.Configuration, sensor kentix.SensorData) error {
+func UpsertMultiSensorData(config apiserver.Configuration, sensorData kentix.SensorData) error {
+	sensors, err := conf.GetConfigSensors(context.Background(), config)
+	if err != nil {
+		return fmt.Errorf("getting config sensors: %v", err)
+	}
 	for _, projectId := range conf.ProjIds(config) {
-		err := upsertMultiSensorData(config, projectId, sensor)
-		if err != nil {
-			return err
+		for _, sensor := range sensors {
+			if err := upsertMultiSensorData(sensor, projectId, sensorData); err != nil {
+				return fmt.Errorf("upserting MultiSensor data: %v", err)
+			}
 		}
 	}
 	return nil
@@ -126,31 +131,25 @@ type sensorDataPayload struct {
 	PeopleCount    string `json:"people_count"`
 }
 
-func upsertMultiSensorData(config apiserver.Configuration, projectId string, sensor kentix.SensorData) error {
-	log.Debug("Eliona", "Upserting data for MultiSensor: config %d and MultiSensor '%s'", config.Id, sensor.Name)
-	assetId, err := conf.GetAssetId(context.Background(), config, projectId, "todo") // TODO: get asset ID of the device
-	if err != nil {
-		return err
-	}
-	if assetId == nil {
-		return fmt.Errorf("unable to find asset ID")
-	}
+func upsertMultiSensorData(sensor apiserver.Sensor, projectId string, sensorData kentix.SensorData) error {
+	log.Debug("Eliona", "Upserting data for MultiSensor: sensor %s and MultiSensor '%s'", sensor.SerialNumber, sensorData.Name)
+
 	return upsertData(
 		api.SUBTYPE_INFO,
-		*assetId,
+		*sensor.AssetID,
 		sensorDataPayload{
-			Temperature:    sensor.Temperature.Value,
-			Humidity:       sensor.Humidity.Value,
-			DewPoint:       sensor.Dewpoint.Value,
-			AirPressure:    sensor.AirPressure.Value,
-			AirQuality:     sensor.AirQuality.Value,
-			CO2:            sensor.CO2.Value,
-			CO:             sensor.CO.Value,
-			Heat:           sensor.Heat.Value,
-			ThermalImaging: sensor.TI.Value,
-			Motion:         sensor.Motion.Value,
-			Vibration:      sensor.Vibration.Value,
-			PeopleCount:    sensor.PeopleCount.Value,
+			Temperature:    sensorData.Temperature.Value,
+			Humidity:       sensorData.Humidity.Value,
+			DewPoint:       sensorData.Dewpoint.Value,
+			AirPressure:    sensorData.AirPressure.Value,
+			AirQuality:     sensorData.AirQuality.Value,
+			CO2:            sensorData.CO2.Value,
+			CO:             sensorData.CO.Value,
+			Heat:           sensorData.Heat.Value,
+			ThermalImaging: sensorData.TI.Value,
+			Motion:         sensorData.Motion.Value,
+			Vibration:      sensorData.Vibration.Value,
+			PeopleCount:    sensorData.PeopleCount.Value,
 		},
 	)
 }

@@ -31,8 +31,13 @@ import (
 
 func collectData() {
 	configs, err := conf.GetConfigs(context.Background())
-	if len(configs) <= 0 || err != nil {
-		log.Fatal("conf", "Couldn't read config from configured database: %v", err)
+	if err != nil {
+		log.Fatal("conf", "Couldn't read configs from DB: %v", err)
+		return
+	}
+	if len(configs) == 0 {
+		log.Fatal("conf", "No configs in DB")
+		return
 	}
 
 	for _, config := range configs {
