@@ -13,15 +13,20 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-FROM golang:1.18-alpine3.15 AS build
+FROM golang:1.20-alpine3.17 AS build
 
 WORKDIR /
 COPY . ./
 
-RUN go mod download
-RUN go build -o ../app
+RUN apk add git
 
-FROM alpine:3.15 AS target
+RUN go mod download
+
+RUN DATE=$(date) && \
+	GIT_COMMIT=$(git rev-list -1 HEAD) && \
+	go build -ldflags "-X 'template/apiservices.BuildTimestamp=$DATE' -X 'api-v2/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
+
+FROM alpine:3.17 AS target
 
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/

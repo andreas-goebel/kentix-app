@@ -116,6 +116,35 @@ paths:
         400:
           description: Bad request
 
+  /version:
+    get:
+      summary: Version of the API
+      description: Gets information about the API version.
+      operationId: getVersion
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the API version.
+          content:
+            application/json:
+              schema:
+                type: object
+  /version/openapi.json:
+    get:
+      summary: OpenAPI specification for this API version
+      description: Gets specification for this API version as an openapi.json file.
+      operationId: getOpenAPI
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the openapi.json file.
+          content:
+            application/json:
+              schema:
+                type: object
+
 components:
   parameters:
     config-id:
