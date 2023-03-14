@@ -63,10 +63,10 @@
 	],
 	"custom": true,
 	"icon": "bell",
-	"name": "Kentix AlarmManager",
+	"name": "kentix_alarm_manager",
 	"translation": {
-		"de": "Die zentrale Systemeinheit",
-		"en": "Central system unit"
+		"de": "Kentix AlarmManager",
+		"en": "Kentix AlarmManager"
 	},
 	"urldoc": "https://kentix.com/transfer/api/alarmmanager",
 	"vendor": "Kentix"

@@ -25,10 +25,10 @@ import (
 )
 
 const (
-	AccessPointAssetType  = "Kentix Accessmanager"
-	AlarmManagerAssetType = "Kentix AlarmManager"
-	MultiSensorAssetType  = "Kentix MultiSensor"
-	DoorlockAssetType     = "Kentix Doorlock"
+	AccessPointAssetType  = "kentix_access_manager"
+	AlarmManagerAssetType = "kentix_alarm_manager"
+	MultiSensorAssetType  = "kentix_multi_sensor"
+	DoorlockAssetType     = "kentix_doorlock"
 )
 
 type infoResponse struct {
