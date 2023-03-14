@@ -30,46 +30,6 @@
 			},
 			"type": "device-info"
 		},
-		{
-			"enable": true,
-			"name": "power_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Stromsabotage",
-				"en": "Power sabotage"
-			},
-			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "connection_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Anschluss-Sabotage",
-				"en": "Connection sabotage"
-			},
-			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "internal_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Interne Sabotage",
-				"en": "Internal sabotage"
-			},
-			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "internal_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Interne Sabotage",
-				"en": "Internal sabotage"
-			},
-			"type": "device-info"
-		},
 
 		{
 			"enable": true,

@@ -27,11 +27,25 @@ import (
 // points to a not existing endpoint and has to be changed.
 func InitConfiguration(connection db.Connection) error {
 	_, err := InsertConfig(context.Background(), apiserver.Configuration{
-		Address:         "https://example.com",
+		Address:         "http://localhost:3031",
 		ApiKey:          "ikcsjhzrflwz5",
 		Enable:          common.Ptr(true),
 		RefreshInterval: 30,
 		ProjectIDs:      &[]string{"1", "2", "3"},
+	})
+	_, err = InsertConfig(context.Background(), apiserver.Configuration{
+		Address:         "http://localhost:3032",
+		ApiKey:          "ikcsjhzrflwz5",
+		Enable:          common.Ptr(true),
+		RefreshInterval: 30,
+		ProjectIDs:      &[]string{"1", "3"},
+	})
+	_, err = InsertConfig(context.Background(), apiserver.Configuration{
+		Address:         "http://localhost:3033",
+		ApiKey:          "ikcsjhzrflwz5",
+		Enable:          common.Ptr(true),
+		RefreshInterval: 30,
+		ProjectIDs:      &[]string{"1"},
 	})
 	return err
 }
