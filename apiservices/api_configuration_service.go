@@ -11,6 +11,7 @@ package apiservices
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"kentix/apiserver"
@@ -34,7 +35,6 @@ func (s *ConfigurationApiService) GetConfigurations(ctx context.Context) (apiser
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}
 	return apiserver.Response(http.StatusOK, configs), nil
-
 }
 
 func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, config apiserver.Configuration) (apiserver.ImplResponse, error) {
@@ -43,4 +43,35 @@ func (s *ConfigurationApiService) PostConfiguration(ctx context.Context, config 
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}
 	return apiserver.Response(http.StatusCreated, insertedConfig), nil
+}
+
+func (s *ConfigurationApiService) GetConfigurationById(ctx context.Context, configId int64) (apiserver.ImplResponse, error) {
+	config, err := conf.GetConfig(ctx, configId)
+	if errors.Is(err, conf.ErrBadRequest) {
+		return apiserver.ImplResponse{Code: http.StatusBadRequest}, nil
+	}
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusOK, config), nil
+}
+
+func (s *ConfigurationApiService) PutConfigurationById(ctx context.Context, configId int64, config apiserver.Configuration) (apiserver.ImplResponse, error) {
+	config.Id = &configId
+	upsertedConfig, err := conf.InsertConfig(ctx, config)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusCreated, upsertedConfig), nil
+}
+
+func (s *ConfigurationApiService) DeleteConfigurationById(ctx context.Context, configId int64) (apiserver.ImplResponse, error) {
+	err := conf.DeleteConfig(ctx, configId)
+	if errors.Is(err, conf.ErrBadRequest) {
+		return apiserver.ImplResponse{Code: http.StatusBadRequest}, nil
+	}
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.ImplResponse{Code: http.StatusNoContent}, nil
 }
