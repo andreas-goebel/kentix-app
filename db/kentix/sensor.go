@@ -24,42 +24,37 @@ import (
 
 // Sensor is an object representing the database table.
 type Sensor struct {
-	ID              int64      `boil:"id" json:"id" toml:"id" yaml:"id"`
 	ConfigurationID int64      `boil:"configuration_id" json:"configuration_id" toml:"configuration_id" yaml:"configuration_id"`
 	ProjectID       string     `boil:"project_id" json:"project_id" toml:"project_id" yaml:"project_id"`
-	AssetID         null.Int32 `boil:"asset_id" json:"asset_id,omitempty" toml:"asset_id" yaml:"asset_id,omitempty"`
 	SerialNumber    string     `boil:"serial_number" json:"serial_number" toml:"serial_number" yaml:"serial_number"`
+	AssetID         null.Int32 `boil:"asset_id" json:"asset_id,omitempty" toml:"asset_id" yaml:"asset_id,omitempty"`
 
 	R *sensorR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L sensorL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var SensorColumns = struct {
-	ID              string
 	ConfigurationID string
 	ProjectID       string
-	AssetID         string
 	SerialNumber    string
+	AssetID         string
 }{
-	ID:              "id",
 	ConfigurationID: "configuration_id",
 	ProjectID:       "project_id",
-	AssetID:         "asset_id",
 	SerialNumber:    "serial_number",
+	AssetID:         "asset_id",
 }
 
 var SensorTableColumns = struct {
-	ID              string
 	ConfigurationID string
 	ProjectID       string
-	AssetID         string
 	SerialNumber    string
+	AssetID         string
 }{
-	ID:              "sensor.id",
 	ConfigurationID: "sensor.configuration_id",
 	ProjectID:       "sensor.project_id",
-	AssetID:         "sensor.asset_id",
 	SerialNumber:    "sensor.serial_number",
+	AssetID:         "sensor.asset_id",
 }
 
 // Generated where
@@ -126,17 +121,15 @@ func (w whereHelpernull_Int32) IsNull() qm.QueryMod    { return qmhelper.WhereIs
 func (w whereHelpernull_Int32) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var SensorWhere = struct {
-	ID              whereHelperint64
 	ConfigurationID whereHelperint64
 	ProjectID       whereHelperstring
-	AssetID         whereHelpernull_Int32
 	SerialNumber    whereHelperstring
+	AssetID         whereHelpernull_Int32
 }{
-	ID:              whereHelperint64{field: "\"kentix\".\"sensor\".\"id\""},
 	ConfigurationID: whereHelperint64{field: "\"kentix\".\"sensor\".\"configuration_id\""},
 	ProjectID:       whereHelperstring{field: "\"kentix\".\"sensor\".\"project_id\""},
-	AssetID:         whereHelpernull_Int32{field: "\"kentix\".\"sensor\".\"asset_id\""},
 	SerialNumber:    whereHelperstring{field: "\"kentix\".\"sensor\".\"serial_number\""},
+	AssetID:         whereHelpernull_Int32{field: "\"kentix\".\"sensor\".\"asset_id\""},
 }
 
 // SensorRels is where relationship names are stored.
@@ -167,10 +160,10 @@ func (r *sensorR) GetConfiguration() *Configuration {
 type sensorL struct{}
 
 var (
-	sensorAllColumns            = []string{"id", "configuration_id", "project_id", "asset_id", "serial_number"}
+	sensorAllColumns            = []string{"configuration_id", "project_id", "serial_number", "asset_id"}
 	sensorColumnsWithoutDefault = []string{"project_id", "serial_number"}
-	sensorColumnsWithDefault    = []string{"id", "configuration_id", "asset_id"}
-	sensorPrimaryKeyColumns     = []string{"id"}
+	sensorColumnsWithDefault    = []string{"configuration_id", "asset_id"}
+	sensorPrimaryKeyColumns     = []string{"configuration_id", "project_id", "serial_number"}
 	sensorGeneratedColumns      = []string{}
 )
 
@@ -627,7 +620,7 @@ func (o *Sensor) SetConfiguration(ctx context.Context, exec boil.ContextExecutor
 		strmangle.SetParamNames("\"", "\"", 1, []string{"configuration_id"}),
 		strmangle.WhereClause("\"", "\"", 2, sensorPrimaryKeyColumns),
 	)
-	values := []interface{}{related.ID, o.ID}
+	values := []interface{}{related.ID, o.ConfigurationID, o.ProjectID, o.SerialNumber}
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -670,13 +663,13 @@ func Sensors(mods ...qm.QueryMod) sensorQuery {
 }
 
 // FindSensorG retrieves a single record by ID.
-func FindSensorG(ctx context.Context, iD int64, selectCols ...string) (*Sensor, error) {
-	return FindSensor(ctx, boil.GetContextDB(), iD, selectCols...)
+func FindSensorG(ctx context.Context, configurationID int64, projectID string, serialNumber string, selectCols ...string) (*Sensor, error) {
+	return FindSensor(ctx, boil.GetContextDB(), configurationID, projectID, serialNumber, selectCols...)
 }
 
 // FindSensor retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindSensor(ctx context.Context, exec boil.ContextExecutor, iD int64, selectCols ...string) (*Sensor, error) {
+func FindSensor(ctx context.Context, exec boil.ContextExecutor, configurationID int64, projectID string, serialNumber string, selectCols ...string) (*Sensor, error) {
 	sensorObj := &Sensor{}
 
 	sel := "*"
@@ -684,10 +677,10 @@ func FindSensor(ctx context.Context, exec boil.ContextExecutor, iD int64, select
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"kentix\".\"sensor\" where \"id\"=$1", sel,
+		"select %s from \"kentix\".\"sensor\" where \"configuration_id\"=$1 AND \"project_id\"=$2 AND \"serial_number\"=$3", sel,
 	)
 
-	q := queries.Raw(query, iD)
+	q := queries.Raw(query, configurationID, projectID, serialNumber)
 
 	err := q.Bind(ctx, exec, sensorObj)
 	if err != nil {
@@ -1071,7 +1064,7 @@ func (o *Sensor) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, 
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), sensorPrimaryKeyMapping)
-	sql := "DELETE FROM \"kentix\".\"sensor\" WHERE \"id\"=$1"
+	sql := "DELETE FROM \"kentix\".\"sensor\" WHERE \"configuration_id\"=$1 AND \"project_id\"=$2 AND \"serial_number\"=$3"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1186,7 +1179,7 @@ func (o *Sensor) ReloadG(ctx context.Context) error {
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Sensor) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindSensor(ctx, exec, o.ID)
+	ret, err := FindSensor(ctx, exec, o.ConfigurationID, o.ProjectID, o.SerialNumber)
 	if err != nil {
 		return err
 	}
@@ -1235,21 +1228,21 @@ func (o *SensorSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) 
 }
 
 // SensorExistsG checks if the Sensor row exists.
-func SensorExistsG(ctx context.Context, iD int64) (bool, error) {
-	return SensorExists(ctx, boil.GetContextDB(), iD)
+func SensorExistsG(ctx context.Context, configurationID int64, projectID string, serialNumber string) (bool, error) {
+	return SensorExists(ctx, boil.GetContextDB(), configurationID, projectID, serialNumber)
 }
 
 // SensorExists checks if the Sensor row exists.
-func SensorExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (bool, error) {
+func SensorExists(ctx context.Context, exec boil.ContextExecutor, configurationID int64, projectID string, serialNumber string) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"kentix\".\"sensor\" where \"id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"kentix\".\"sensor\" where \"configuration_id\"=$1 AND \"project_id\"=$2 AND \"serial_number\"=$3 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, iD)
+		fmt.Fprintln(writer, configurationID, projectID, serialNumber)
 	}
-	row := exec.QueryRowContext(ctx, sql, iD)
+	row := exec.QueryRowContext(ctx, sql, configurationID, projectID, serialNumber)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -1261,5 +1254,5 @@ func SensorExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (boo
 
 // Exists checks if the Sensor row exists.
 func (o *Sensor) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return SensorExists(ctx, exec, o.ID)
+	return SensorExists(ctx, exec, o.ConfigurationID, o.ProjectID, o.SerialNumber)
 }

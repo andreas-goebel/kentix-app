@@ -125,6 +125,7 @@ func GetConfigs(ctx context.Context) ([]apiserver.Configuration, error) {
 	return apiConfigs, nil
 }
 
+// Todo: could this be substituted by configR.getSensors?
 func GetConfigSensors(ctx context.Context, config apiserver.Configuration) ([]apiserver.Sensor, error) {
 	if config.Id == nil {
 		return nil, fmt.Errorf("shouldn't happen: config ID is null")

@@ -722,7 +722,7 @@ func (o *Configuration) AddSensors(ctx context.Context, exec boil.ContextExecuto
 				strmangle.SetParamNames("\"", "\"", 1, []string{"configuration_id"}),
 				strmangle.WhereClause("\"", "\"", 2, sensorPrimaryKeyColumns),
 			)
-			values := []interface{}{o.ID, rel.ID}
+			values := []interface{}{o.ID, rel.ConfigurationID, rel.ProjectID, rel.SerialNumber}
 
 			if boil.IsDebug(ctx) {
 				writer := boil.DebugWriterFrom(ctx)
