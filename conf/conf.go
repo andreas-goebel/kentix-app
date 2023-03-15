@@ -17,6 +17,7 @@ package conf
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"kentix/apiserver"
 	dbkentix "kentix/db/kentix"
@@ -30,6 +31,8 @@ import (
 // todo: unmock appname
 const appname = "kentix"
 
+var ErrBadRequest = errors.New("bad request")
+
 // InsertConfig inserts or updates
 func InsertConfig(ctx context.Context, config apiserver.Configuration) (apiserver.Configuration, error) {
 	dbConfig := dbConfigFromApiConfig(config)
@@ -38,6 +41,36 @@ func InsertConfig(ctx context.Context, config apiserver.Configuration) (apiserve
 		return apiserver.Configuration{}, err
 	}
 	return config, err
+}
+
+func GetConfig(ctx context.Context, configID int64) (*apiserver.Configuration, error) {
+	dbConfig, err := dbkentix.Configurations(
+		dbkentix.ConfigurationWhere.ID.EQ(configID),
+	).One(ctx, db.Database(appname))
+	if err != nil {
+		return nil, fmt.Errorf("fetching config from database")
+	}
+	if dbConfig == nil {
+		return nil, ErrBadRequest
+	}
+	apiConfig := apiConfigFromDbConfig(dbConfig)
+	return &apiConfig, nil
+}
+
+func DeleteConfig(ctx context.Context, configID int64) error {
+	count, err := dbkentix.Configurations(
+		dbkentix.ConfigurationWhere.ID.EQ(configID),
+	).DeleteAll(ctx, db.Database(appname))
+	if err != nil {
+		return fmt.Errorf("fetching config from database")
+	}
+	if count > 1 {
+		return fmt.Errorf("shouldn't happen: deleted more (%v) configs by ID", count)
+	}
+	if count == 0 {
+		return ErrBadRequest
+	}
+	return nil
 }
 
 func dbConfigFromApiConfig(apiConfig apiserver.Configuration) (dbConfig dbkentix.Configuration) {

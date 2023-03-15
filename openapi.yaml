@@ -64,8 +64,100 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Configuration'
+  /configs/{config-id}:
+    get:
+      tags:
+        - Configuration
+      summary: Get Kentix configuration
+      description: Gets information about the Kentix configuration with the given id
+      parameters:
+        - $ref: '#/components/parameters/config-id'
+      operationId: getConfigurationById
+      responses:
+        200:
+          description: Successfully returned Kentix configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+        400:
+          description: Bad request
+    put:
+      tags:
+        - Configuration
+      summary: Updates a Kentix configuration
+      description: Updates a Kentix configuration
+      parameters:
+        - $ref: '#/components/parameters/config-id'
+      operationId: putConfigurationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration'
+      responses:
+        200:
+          description: Successfully updated a Kentix configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+    delete:
+      tags:
+        - Configuration
+      summary: Deletes a Kentix configuration
+      description: Removes information about the Kentix configuration with the given id
+      parameters:
+        - $ref: '#/components/parameters/config-id'
+      operationId: deleteConfigurationById
+      responses:
+        204:
+          description: Successfully deleted configured Kentix configuration
+        400:
+          description: Bad request
+
+  /version:
+    get:
+      summary: Version of the API
+      description: Gets information about the API version.
+      operationId: getVersion
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the API version.
+          content:
+            application/json:
+              schema:
+                type: object
+  /version/openapi.json:
+    get:
+      summary: OpenAPI specification for this API version
+      description: Gets specification for this API version as an openapi.json file.
+      operationId: getOpenAPI
+      tags:
+        - Version
+      responses:
+        200:
+          description: Successfully returned the openapi.json file.
+          content:
+            application/json:
+              schema:
+                type: object
 
 components:
+  parameters:
+    config-id:
+      name: config-id
+      in: path
+      description: The ID of the Kentix Config
+      example: 4711
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 4711
+
   schemas:
     Configuration:
       type: object
@@ -111,8 +203,8 @@ components:
           items:
             type: string
           example:
-            - 42
-            - 99
+            - "42"
+            - "99"
 
     Sensor:
       type: object

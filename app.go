@@ -142,6 +142,7 @@ func collectDataForConfig(config apiserver.Configuration) {
 func listenApiRequests() {
 	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
 		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
+		apiserver.NewVersionApiController(apiservices.NewVersionApiService()),
 	))
 	log.Fatal("main", "Error in API Server: %v", err)
 }
