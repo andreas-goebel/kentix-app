@@ -39,7 +39,7 @@
 				"de": "Temperatur",
 				"en": "Temperature"
 			},
-			"type": "device-status",
+			"type": "temperature",
 			"unit": "˚C"
 		},
 		{
@@ -50,7 +50,7 @@
 				"de": "Luftfeuchtigkeit",
 				"en": "Humidity"
 			},
-			"type": "device-status",
+			"type": "humidity",
 			"unit": "%"
 		},
 		{
@@ -61,7 +61,7 @@
 				"de": "Taupunkt",
 				"en": "Dew point"
 			},
-			"type": "device-status",
+			"type": "humidity",
 			"unit": "˚C"
 		},
 		{
@@ -72,7 +72,7 @@
 				"de": "Luftdruck",
 				"en": "Air pressure"
 			},
-			"type": "device-status",
+			"type": "pressure",
 			"unit": "hPa"
 		},
 		{
@@ -83,7 +83,7 @@
 				"de": "Luftqualität",
 				"en": "Air quality"
 			},
-			"type": "device-status"
+			"type": "air_quality"
 		},
 		{
 			"enable": true,
@@ -93,7 +93,7 @@
 				"de": "CO₂",
 				"en": "CO₂"
 			},
-			"type": "device-status",
+			"type": "co2",
 			"unit": "ppm"
 		},
 		{
@@ -104,7 +104,7 @@
 				"de": "CO",
 				"en": "CO"
 			},
-			"type": "device-status",
+			"type": "weather",
 			"unit": "ppm"
 		},
 		{
@@ -112,10 +112,10 @@
 			"name": "heat",
 			"subtype": "input",
 			"translation": {
-				"de": "CO₂",
-				"en": "CO₂"
+				"de": "Hitze",
+				"en": "Heat"
 			},
-			"type": "device-status"
+			"type": "temperature"
 		},
 		{
 			"enable": true,
@@ -125,7 +125,7 @@
 				"de": "Wärmebild",
 				"en": "Thermal imaging"
 			},
-			"type": "device-status"
+			"type": "temperature"
 		},
 		{
 			"enable": true,
@@ -135,7 +135,7 @@
 				"de": "Bewegung",
 				"en": "Motion"
 			},
-			"type": "device-status"
+			"type": "motion"
 		},
 		{
 			"enable": true,
@@ -145,7 +145,7 @@
 				"de": "Vibration",
 				"en": "Vibration"
 			},
-			"type": "device-status"
+			"type": "motion"
 		},
 		{
 			"enable": true,
@@ -155,11 +155,11 @@
 				"de": "Menschen zählen",
 				"en": "People count"
 			},
-			"type": "device-status"
+			"type": "people-count"
 		}
 	],
 	"custom": true,
-	"icon": "x",
+	"icon": "environment",
 	"name": "kentix_multi_sensor",
 	"translation": {
 		"de": "Kentix MultiSensor",

@@ -32,7 +32,7 @@
 		}
 	],
 	"custom": true,
-	"icon": "lock",
+	"icon": "closable",
 	"name": "kentix_access_manager",
 	"translation": {
 		"de": "Kentix AccessManager",
