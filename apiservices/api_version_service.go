@@ -33,17 +33,14 @@ func NewVersionApiService() apiserver.VersionApiServicer {
 
 // GetOpenAPI - OpenAPI specification for this API version
 func (s *VersionApiService) GetOpenAPI(ctx context.Context) (apiserver.ImplResponse, error) {
-	bytes, err := os.ReadFile("openapi.json")
+	bytes, err := os.ReadFile("openapi.yaml")
 	if err != nil {
-		bytes, err = os.ReadFile("apiserver/api/openapi.yaml")
-		if err != nil {
-			log.Error("services", "%s: %v", "GetOpenAPI", err)
-			return apiserver.ImplResponse{Code: http.StatusNotFound}, err
-		}
+		log.Error("services", "%s: %v", "GetOpenAPI", err)
+		return apiserver.ImplResponse{Code: http.StatusNotFound}, err
 	}
+
 	var body interface{}
-	err = yaml.Unmarshal(bytes, &body)
-	if err != nil {
+	if err := yaml.Unmarshal(bytes, &body); err != nil {
 		log.Error("services", "%s: %v", "GetOpenAPI", err)
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}

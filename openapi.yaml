@@ -38,7 +38,7 @@ paths:
       description: Gets information about all Kentix configurations
       operationId: getConfigurations
       responses:
-        200:
+        "200":
           description: Successfully returned configured Kentix configurations
           content:
             application/json:
@@ -58,7 +58,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Configuration'
       responses:
-        201:
+        "201":
           description: Successfully created a new Kentix configuration
           content:
             application/json:
@@ -74,13 +74,13 @@ paths:
         - $ref: '#/components/parameters/config-id'
       operationId: getConfigurationById
       responses:
-        200:
+        "200":
           description: Successfully returned Kentix configuration
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Configuration'
-        400:
+        "400":
           description: Bad request
     put:
       tags:
@@ -96,7 +96,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Configuration'
       responses:
-        200:
+        "200":
           description: Successfully updated a Kentix configuration
           content:
             application/json:
@@ -111,9 +111,9 @@ paths:
         - $ref: '#/components/parameters/config-id'
       operationId: deleteConfigurationById
       responses:
-        204:
+        "204":
           description: Successfully deleted configured Kentix configuration
-        400:
+        "400":
           description: Bad request
 
   /version:
@@ -124,7 +124,7 @@ paths:
       tags:
         - Version
       responses:
-        200:
+        "200":
           description: Successfully returned the API version.
           content:
             application/json:
@@ -138,7 +138,7 @@ paths:
       tags:
         - Version
       responses:
-        200:
+        "200":
           description: Successfully returned the openapi.json file.
           content:
             application/json:
