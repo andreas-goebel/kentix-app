@@ -17,26 +17,26 @@
 -- The only thing that remains after testing then are the incremented auto-increment values and app
 -- registration (which you can optionally remove as well by uncommenting the last command).
 
-INSERT INTO eliona_app (app_name, category, enable)
+INSERT INTO public.eliona_app (app_name, category, enable)
 VALUES ('kentix', 'app', 't')
 ON CONFLICT (app_name) DO UPDATE SET initialized_at = null;
 
 DROP SCHEMA IF EXISTS kentix CASCADE;
 
-DELETE FROM heap
+DELETE FROM public.heap
 WHERE asset_id IN (
 	SELECT asset_id
-	FROM asset
+	FROM public.asset
 	WHERE asset_type LIKE 'kentix_%'
 );
 
-DELETE FROM attribute_schema
+DELETE FROM public.attribute_schema
 WHERE asset_type LIKE 'kentix_%';
 
-DELETE FROM asset
+DELETE FROM public.asset
 WHERE asset_type LIKE 'kentix_%'; 
 
-DELETE FROM asset_type
+DELETE FROM public.asset_type
 WHERE asset_type LIKE 'kentix_%';
 
--- DELETE FROM eliona_app WHERE app_name = 'kentix';
+-- DELETE FROM public.eliona_app WHERE app_name = 'kentix';
