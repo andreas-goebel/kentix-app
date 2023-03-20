@@ -71,7 +71,7 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	infoResponse, err := http.Read[infoResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	infoResponse, err := http.Read[infoResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
@@ -138,7 +138,7 @@ func fetchDoorlocks(url string, conf apiserver.Configuration) ([]DoorLock, error
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	accessPointResponse, err := http.Read[accessPointResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	accessPointResponse, err := http.Read[accessPointResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
@@ -204,7 +204,7 @@ func GetMultiSensorReadings(conf apiserver.Configuration) (*SensorData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	sensorResponse, err := http.Read[sensorResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	sensorResponse, err := http.Read[sensorResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
