@@ -70,21 +70,18 @@ func collectData() {
 				*config.ProjectIDs)
 		}
 
-		// Otherwise it would get overwritten with each iteration.
-		cc := config
-
 		// Runs the ReadNode. If the current node is currently running, skip the execution
 		// After the execution sleeps the configured timeout. During this timeout no further
 		// process for this config is started to read the data.
-		common.RunOnce(func() {
-			log.Info("main", "Collecting %d started", *cc.Id)
+		common.RunOnceWithParam(func(config apiserver.Configuration) {
+			log.Info("main", "Collecting %d started", *config.Id)
 
-			collectDataForConfig(cc)
+			collectDataForConfig(config)
 
-			log.Info("main", "Collecting %d finished", *cc.Id)
+			log.Info("main", "Collecting %d finished", *config.Id)
 
-			time.Sleep(time.Second * time.Duration(cc.RefreshInterval))
-		}, *cc.Id)
+			time.Sleep(time.Second * time.Duration(config.RefreshInterval))
+		}, config, *config.Id)
 	}
 }
 
