@@ -32,11 +32,11 @@
 		}
 	],
 	"custom": true,
-	"icon": "lock",
-	"name": "Kentix Doorlock",
+	"icon": "closable",
+	"name": "kentix_doorlock",
 	"translation": {
-		"de": "Türschloss",
-		"en": "Doorlock"
+		"de": "Kentix Türschloss",
+		"en": "Kentix Doorlock"
 	},
 	"urldoc": "https://kentix.com/transfer/api/accessmanager",
 	"vendor": "Kentix"

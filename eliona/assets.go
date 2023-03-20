@@ -50,10 +50,13 @@ func createDeviceAssetIfNecessary(config apiserver.Configuration, projectId stri
 	return createAssetIfNecessary(assetData)
 }
 
-func CreateDoorlockAssetsIfNecessary(config apiserver.Configuration, spec kentix.DoorLock) error {
+func CreateDoorlockAssetsIfNecessary(config apiserver.Configuration, spec kentix.DoorLock, parentDeviceSerial string) error {
 	for _, projectId := range conf.ProjIds(config) {
-		// TODO: Implement parent asset ID for doorlocks?
-		if err := createDoorlockAssetIfNecessary(config, projectId, nil, spec); err != nil {
+		parentAssetID, err := conf.GetAssetId(context.Background(), config, projectId, parentDeviceSerial)
+		if err != nil {
+			return fmt.Errorf("getting parent asset ID: %v", err)
+		}
+		if err := createDoorlockAssetIfNecessary(config, projectId, parentAssetID, spec); err != nil {
 			return fmt.Errorf("creating assets for device %s: %v", spec.Serial, err)
 		}
 	}

@@ -29,44 +29,14 @@
 				"en": "Firmware version"
 			},
 			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "power_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Stromsabotage",
-				"en": "Power sabotage"
-			},
-			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "connection_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Anschluss-Sabotage",
-				"en": "Connection sabotage"
-			},
-			"type": "device-info"
-		},
-		{
-			"enable": true,
-			"name": "internal_sabotage",
-			"subtype": "info",
-			"translation": {
-				"de": "Interne Sabotage",
-				"en": "Internal sabotage"
-			},
-			"type": "device-info"
 		}
 	],
 	"custom": true,
-	"icon": "lock",
-	"name": "Kentix AccessManager",
+	"icon": "closable",
+	"name": "kentix_access_manager",
 	"translation": {
-		"de": "Die zentrale Komponente der Zutrittslösung",
-		"en": "Central component of the access solution"
+		"de": "Kentix AccessManager",
+		"en": "Kentix AccessManager"
 	},
 	"urldoc": "https://kentix.com/transfer/api/accessmanager",
 	"vendor": "Kentix"

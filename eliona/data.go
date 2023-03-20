@@ -135,7 +135,7 @@ func upsertMultiSensorData(sensor apiserver.Sensor, projectId string, sensorData
 	log.Debug("Eliona", "Upserting data for MultiSensor: sensor %s and MultiSensor '%s'", sensor.SerialNumber, sensorData.Name)
 
 	return upsertData(
-		api.SUBTYPE_INFO,
+		api.SUBTYPE_INPUT,
 		*sensor.AssetID,
 		sensorDataPayload{
 			Temperature:    sensorData.Temperature.Value,

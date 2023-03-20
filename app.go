@@ -115,7 +115,7 @@ func collectDataForConfig(config apiserver.Configuration) {
 			return
 		}
 		for _, doorlock := range doorlocks {
-			if err := eliona.CreateDoorlockAssetsIfNecessary(config, doorlock); err != nil {
+			if err := eliona.CreateDoorlockAssetsIfNecessary(config, doorlock, deviceInfo.Serial); err != nil {
 				log.Error("eliona", "creating doorlock assets: %v", err)
 				return
 			}
