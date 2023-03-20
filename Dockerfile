@@ -24,7 +24,7 @@ RUN go mod download
 
 RUN DATE=$(date) && \
 	GIT_COMMIT=$(git rev-list -1 HEAD) && \
-	go build -ldflags "-X 'template/apiservices.BuildTimestamp=$DATE' -X 'api-v2/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
+	go build -ldflags "-X 'kentix/apiservices.BuildTimestamp=$DATE' -X 'kentix/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
 
 FROM alpine:3.17 AS target
 
