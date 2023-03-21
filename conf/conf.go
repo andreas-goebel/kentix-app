@@ -20,7 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"kentix/apiserver"
-	dbkentix "kentix/db/kentix"
+	"kentix/appdb"
 
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/volatiletech/null/v8"
@@ -40,8 +40,8 @@ func InsertConfig(ctx context.Context, config apiserver.Configuration) (apiserve
 }
 
 func GetConfig(ctx context.Context, configID int64) (*apiserver.Configuration, error) {
-	dbConfig, err := dbkentix.Configurations(
-		dbkentix.ConfigurationWhere.ID.EQ(configID),
+	dbConfig, err := appdb.Configurations(
+		appdb.ConfigurationWhere.ID.EQ(configID),
 	).OneG(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("fetching config from database")
@@ -54,8 +54,8 @@ func GetConfig(ctx context.Context, configID int64) (*apiserver.Configuration, e
 }
 
 func DeleteConfig(ctx context.Context, configID int64) error {
-	count, err := dbkentix.Configurations(
-		dbkentix.ConfigurationWhere.ID.EQ(configID),
+	count, err := appdb.Configurations(
+		appdb.ConfigurationWhere.ID.EQ(configID),
 	).DeleteAllG(ctx)
 	if err != nil {
 		return fmt.Errorf("fetching config from database")
@@ -69,7 +69,7 @@ func DeleteConfig(ctx context.Context, configID int64) error {
 	return nil
 }
 
-func dbConfigFromApiConfig(apiConfig apiserver.Configuration) (dbConfig dbkentix.Configuration) {
+func dbConfigFromApiConfig(apiConfig apiserver.Configuration) (dbConfig appdb.Configuration) {
 	dbConfig.ID = null.Int64FromPtr(apiConfig.Id).Int64
 	dbConfig.Address = null.StringFrom(apiConfig.Address)
 	dbConfig.APIKey = null.StringFrom(apiConfig.ApiKey)
@@ -85,7 +85,7 @@ func dbConfigFromApiConfig(apiConfig apiserver.Configuration) (dbConfig dbkentix
 	return dbConfig
 }
 
-func apiConfigFromDbConfig(dbConfig *dbkentix.Configuration) (apiConfig apiserver.Configuration) {
+func apiConfigFromDbConfig(dbConfig *appdb.Configuration) (apiConfig apiserver.Configuration) {
 	apiConfig.Id = &dbConfig.ID
 	apiConfig.Address = dbConfig.Address.String
 	apiConfig.ApiKey = dbConfig.APIKey.String
@@ -97,7 +97,7 @@ func apiConfigFromDbConfig(dbConfig *dbkentix.Configuration) (apiConfig apiserve
 	return apiConfig
 }
 
-func apiSensorFromDbSensor(ctx context.Context, dbSensor *dbkentix.Sensor) (apiSensor apiserver.Sensor, err error) {
+func apiSensorFromDbSensor(ctx context.Context, dbSensor *appdb.Sensor) (apiSensor apiserver.Sensor, err error) {
 	apiSensor.AssetID = dbSensor.AssetID.Ptr()
 	dbConfiguration, err := dbSensor.Configuration().OneG(ctx)
 	if err != nil {
@@ -110,7 +110,7 @@ func apiSensorFromDbSensor(ctx context.Context, dbSensor *dbkentix.Sensor) (apiS
 }
 
 func GetConfigs(ctx context.Context) ([]apiserver.Configuration, error) {
-	dbConfigs, err := dbkentix.Configurations().AllG(ctx)
+	dbConfigs, err := appdb.Configurations().AllG(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -126,8 +126,8 @@ func GetConfigSensors(ctx context.Context, config apiserver.Configuration) ([]ap
 	if config.Id == nil {
 		return nil, fmt.Errorf("shouldn't happen: config ID is null")
 	}
-	dbSensors, err := dbkentix.Sensors(
-		dbkentix.SensorWhere.ConfigurationID.EQ(*config.Id),
+	dbSensors, err := appdb.Sensors(
+		appdb.SensorWhere.ConfigurationID.EQ(*config.Id),
 	).AllG(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("looking up sensors in DB: %v", err)
@@ -147,10 +147,10 @@ func GetConfigSensors(ctx context.Context, config apiserver.Configuration) ([]ap
 }
 
 func GetAssetId(ctx context.Context, config apiserver.Configuration, projId string, deviceId string) (*int32, error) {
-	dbSensors, err := dbkentix.Sensors(
-		dbkentix.SensorWhere.ConfigurationID.EQ(null.Int64FromPtr(config.Id).Int64),
-		dbkentix.SensorWhere.ProjectID.EQ(projId),
-		dbkentix.SensorWhere.SerialNumber.EQ(deviceId),
+	dbSensors, err := appdb.Sensors(
+		appdb.SensorWhere.ConfigurationID.EQ(null.Int64FromPtr(config.Id).Int64),
+		appdb.SensorWhere.ProjectID.EQ(projId),
+		appdb.SensorWhere.SerialNumber.EQ(deviceId),
 	).AllG(ctx)
 	if err != nil || len(dbSensors) == 0 {
 		return nil, err
@@ -159,7 +159,7 @@ func GetAssetId(ctx context.Context, config apiserver.Configuration, projId stri
 }
 
 func InsertSensor(ctx context.Context, config apiserver.Configuration, projId string, SerialNumber string, assetId int32) error {
-	var dbSensor dbkentix.Sensor
+	var dbSensor appdb.Sensor
 	dbSensor.ConfigurationID = null.Int64FromPtr(config.Id).Int64
 	dbSensor.ProjectID = projId
 	dbSensor.SerialNumber = SerialNumber
@@ -168,10 +168,10 @@ func InsertSensor(ctx context.Context, config apiserver.Configuration, projId st
 }
 
 func SetConfigActiveState(ctx context.Context, config apiserver.Configuration, state bool) (int64, error) {
-	return dbkentix.Configurations(
-		dbkentix.ConfigurationWhere.ID.EQ(null.Int64FromPtr(config.Id).Int64),
-	).UpdateAllG(ctx, dbkentix.M{
-		dbkentix.ConfigurationColumns.Active: state,
+	return appdb.Configurations(
+		appdb.ConfigurationWhere.ID.EQ(null.Int64FromPtr(config.Id).Int64),
+	).UpdateAllG(ctx, appdb.M{
+		appdb.ConfigurationColumns.Active: state,
 	})
 }
 
@@ -191,7 +191,7 @@ func IsConfigEnabled(config apiserver.Configuration) bool {
 }
 
 func SetAllConfigsInactive(ctx context.Context) (int64, error) {
-	return dbkentix.Configurations().UpdateAllG(ctx, dbkentix.M{
-		dbkentix.ConfigurationColumns.Active: false,
+	return appdb.Configurations().UpdateAllG(ctx, appdb.M{
+		appdb.ConfigurationColumns.Active: false,
 	})
 }
