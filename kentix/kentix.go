@@ -16,6 +16,7 @@
 package kentix
 
 import (
+	"encoding/base64"
 	"fmt"
 	"kentix/apiserver"
 	"net/url"
@@ -66,11 +67,11 @@ func GetDeviceInfo(conf apiserver.Configuration) (*DeviceInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
-	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+authKey(conf.ApiKey))
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	infoResponse, err := http.Read[infoResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	infoResponse, err := http.Read[infoResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
@@ -133,11 +134,11 @@ func GetAccessPointReadings(conf apiserver.Configuration) ([]DoorLock, error) {
 }
 
 func fetchDoorlocks(url string, conf apiserver.Configuration) ([]DoorLock, error) {
-	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+authKey(conf.ApiKey))
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	accessPointResponse, err := http.Read[accessPointResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	accessPointResponse, err := http.Read[accessPointResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
@@ -199,13 +200,17 @@ func GetMultiSensorReadings(conf apiserver.Configuration) (*SensorData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("appending endpoint to URL: %v", err)
 	}
-	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+conf.ApiKey)
+	r, err := http.NewRequestWithApiKey(url, "Authorization", "Basic "+authKey(conf.ApiKey))
 	if err != nil {
 		return nil, fmt.Errorf("creating request to %s: %v", url, err)
 	}
-	sensorResponse, err := http.Read[sensorResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, true)
+	sensorResponse, err := http.Read[sensorResponse](r, time.Duration(*conf.RequestTimeout)*time.Second, false)
 	if err != nil {
 		return nil, fmt.Errorf("reading response from %s: %v", url, err)
 	}
 	return &sensorResponse.Data, nil
+}
+
+func authKey(apiKey string) string {
+	return base64.StdEncoding.EncodeToString([]byte(apiKey + ":"))
 }

@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/app"
-	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
@@ -48,10 +47,6 @@ func main() {
 	// Init the app before the first run.
 	app.Init(db.Pool(), app.AppName(),
 		app.ExecSqlFile("conf/init.sql"),
-		asset.InitAssetTypeFile("eliona/asset-type-alarm-manager.json"),
-		asset.InitAssetTypeFile("eliona/asset-type-access-manager.json"),
-		asset.InitAssetTypeFile("eliona/asset-type-doorlock.json"),
-		asset.InitAssetTypeFile("eliona/asset-type-multi-sensor.json"),
 		conf.InitConfiguration,
 		eliona.InitEliona,
 	)
