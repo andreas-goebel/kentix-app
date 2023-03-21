@@ -39,4 +39,22 @@ WHERE asset_type LIKE 'kentix_%';
 DELETE FROM public.asset_type
 WHERE asset_type LIKE 'kentix_%';
 
+DELETE FROM public.widget_data
+WHERE widget_id IN (
+	SELECT public.widget.id
+	FROM public.widget
+	JOIN public.dashboard USING (dashboard_id)
+	WHERE public.dashboard.name = 'Kentix devices'
+);
+
+DELETE FROM public.widget
+WHERE dashboard_id IN (
+	SELECT dashboard_id
+	FROM public.dashboard
+	WHERE name = 'Kentix devices'
+);
+
+DELETE FROM public.dashboard
+WHERE name = 'Kentix devices';
+
 -- DELETE FROM public.eliona_app WHERE app_name = 'kentix';
