@@ -1,4 +1,4 @@
-# Eliona app to access Kenitx devices
+# Eliona app to access Kentix devices
 This [Eliona app for Kentix](https://github.com/eliona-smart-building-assistant/kentix-app) connects the [Kentix devices](https://www.kentix.com/) to an [Eliona](https://www.eliona.io/) enviroment.
 
 This app collects data from Kentix devices such as AccessManager, AlarmManager and MultiSensor and passes their data to Eliona. Each device corresponds to an asset in an Eliona project.

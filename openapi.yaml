@@ -22,6 +22,8 @@ info:
 externalDocs:
   description: Find out more about the Kentix app
   url: https://github.com/eliona-smart-building-assistant/kentix-app
+servers:
+  - url: http://kentix/v1
 
 tags:
   - name: Configuration
