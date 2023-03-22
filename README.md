@@ -62,6 +62,12 @@ The data is written for each Kentix device, structured into different subtypes o
 - `Input`: Current values reported by Kentix sensors (i.e. MultiSensor readings).
 - `Info`: Static data which specifies a Kentix device like address and firmware info.
 
+### Continuous asset creation
+
+All assets are automatically created once the app is run. The old Kentix firmware does not support device discovery, therefore the user must set a Configuration for each device. Then the app creates Eliona assets for that device.
+
+The only exception is AccessManager, which provides the list of connected doorlocks. New ones are then added automatically.
+
 ## Tools
 
 ### Generate API server stub ###
@@ -81,3 +87,9 @@ For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) i
 .\generate-db.cmd # Windows
 ./generate-db.sh # Linux
 ```
+
+### Mock Kentix devices ###
+`kentix-mock` folder contains mock endpoints implementation:
+- `access-manager`: `localhost:3031`
+- `alarm-manager`: `localhost:3032`
+- `multi-sensor`: `localhost:3033`
