@@ -91,7 +91,6 @@ func collectDataForConfig(config apiserver.Configuration) {
 		log.Error("kentix", "getting device info: %v", err)
 		return
 	}
-	log.Printf(log.DebugLevel, "kentix", "%+v", deviceInfo)
 
 	if err := eliona.CreateAssetsIfNecessary(config, *deviceInfo); err != nil {
 		log.Error("eliona", "creating assets: %v", err)
