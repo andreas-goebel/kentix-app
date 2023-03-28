@@ -29,21 +29,21 @@ func InitConfiguration(connection db.Connection) error {
 	_, err := InsertConfig(context.Background(), apiserver.Configuration{
 		Address:         "http://localhost:3031",
 		ApiKey:          "ikcsjhzrflwz5",
-		Enable:          common.Ptr(true),
+		Enable:          common.Ptr(false),
 		RefreshInterval: 30,
 		ProjectIDs:      &[]string{"1", "2", "3"},
 	})
 	_, err = InsertConfig(context.Background(), apiserver.Configuration{
 		Address:         "http://localhost:3032",
 		ApiKey:          "ikcsjhzrflwz5",
-		Enable:          common.Ptr(true),
+		Enable:          common.Ptr(false),
 		RefreshInterval: 30,
 		ProjectIDs:      &[]string{"1", "3"},
 	})
 	_, err = InsertConfig(context.Background(), apiserver.Configuration{
 		Address:         "http://localhost:3033",
 		ApiKey:          "ikcsjhzrflwz5",
-		Enable:          common.Ptr(true),
+		Enable:          common.Ptr(false),
 		RefreshInterval: 30,
 		ProjectIDs:      &[]string{"1"},
 	})

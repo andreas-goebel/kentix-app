@@ -61,7 +61,7 @@ func KentixDevicesDashboard(projectId string) (api.Dashboard, error) {
 					},
 				},
 				{
-					ElementSequence: nullableInt32(2),
+					ElementSequence: nullableInt32(1),
 					AssetId:         multiSensor.Id,
 					Data: map[string]interface{}{
 						"aggregatedDataField": nil,
@@ -74,7 +74,7 @@ func KentixDevicesDashboard(projectId string) (api.Dashboard, error) {
 					},
 				},
 				{
-					ElementSequence: nullableInt32(3),
+					ElementSequence: nullableInt32(1),
 					AssetId:         multiSensor.Id,
 					Data: map[string]interface{}{
 						"aggregatedDataField": nil,
@@ -87,7 +87,7 @@ func KentixDevicesDashboard(projectId string) (api.Dashboard, error) {
 					},
 				},
 				{
-					ElementSequence: nullableInt32(4),
+					ElementSequence: nullableInt32(1),
 					AssetId:         multiSensor.Id,
 					Data: map[string]interface{}{
 						"aggregatedDataField": nil,

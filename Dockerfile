@@ -30,6 +30,8 @@ FROM alpine:3.17 AS target
 
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
+COPY openapi.yaml /
+COPY eliona/*.json ./eliona/
 
 ENV APPNAME=kentix
 

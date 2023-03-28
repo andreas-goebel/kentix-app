@@ -22,7 +22,7 @@ import (
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 )
 
-// InitEliona initialize the app in aliona
+// InitEliona initializes the app in eliona
 func InitEliona(connection db.Connection) error {
 	if err := asset.InitAssetTypeFile("eliona/asset-type-alarm-manager.json")(connection); err != nil {
 		return fmt.Errorf("init alarm manager asset type: %v", err)
