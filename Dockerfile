@@ -13,7 +13,7 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-FROM golang:1.20-alpine3.17 AS build
+FROM eliona/base-golang:latest-1-alpine AS build
 
 WORKDIR /
 COPY . ./
@@ -26,7 +26,7 @@ RUN DATE=$(date) && \
 	GIT_COMMIT=$(git rev-list -1 HEAD) && \
 	go build -ldflags "-X 'kentix/apiservices.BuildTimestamp=$DATE' -X 'kentix/apiservices.GitCommit=$GIT_COMMIT'" -o ../app
 
-FROM alpine:3.17 AS target
+FROM eliona/base-alpine:latest-3.17 AS target
 
 COPY --from=build /app ./
 COPY conf/*.sql ./conf/
