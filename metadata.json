@@ -10,5 +10,7 @@
   "dashboardTemplateNames": [
     "Kentix devices"
   ],
+  "apiSpecificationPath": "/v1/version/openapi.json",
+  "documentationUrl": "https://doc.eliona.io/collection/eliona-apps/externe-apps/kentix",
   "useEnvironment": [ "CONNECTION_STRING", "API_ENDPOINT", "API_TOKEN" ]
 }
