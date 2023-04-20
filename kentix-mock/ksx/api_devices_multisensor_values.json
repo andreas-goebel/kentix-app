@@ -1,0 +1,72 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/devices/multisensor/values"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "id": 1,
+        "name": "SmartXScan",
+        "state": {
+          "has_alarm": false
+        },
+        "temperature": {
+          "value": "21.7",
+          "has_alarm": false
+        },
+        "humidity": {
+          "value": "34.1",
+          "has_alarm": false
+        },
+        "dewpoint": {
+          "value": "5.2",
+          "has_alarm": false
+        },
+        "co": {
+          "value": "0",
+          "has_alarm": true
+        },
+        "motion": {
+          "value": "0",
+          "has_alarm": false
+        },
+        "vibration": {
+          "value": null,
+          "has_alarm": true
+        },
+        "power_sabotage": {
+          "has_alarm": false
+        },
+        "connection_sabotage": {
+          "has_alarm": false
+        },
+        "internal_sabotage": {
+          "has_alarm": false
+        },
+        "digital_inputs": [
+          {
+            "id": 13,
+            "name": "Input",
+            "input": {
+              "value": "0",
+              "has_alarm": "-1",
+              "unit": "",
+              "unit_prefix": ""
+            }
+          },
+          {
+            "id": 14,
+            "name": "Input",
+            "input": {
+              "value": "0",
+              "has_alarm": "-1",
+              "unit": "",
+              "unit_prefix": ""
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/info"
+  },
+  "response": {
+    "body": {
+      "data": {
+        "name": "SmartXScan",
+        "ip_address": "10.10.10.101",
+        "mac_address": "70:82:0e:11:42:cf",
+        "type": 111,
+        "serial": "1002056550279",
+        "version": {
+          "firmware": "06.24.06 B00650",
+          "atmel": "03.08 B00039",
+          "fsm": "",
+          "gsm": ""
+        },
+        "os_revision": 2,
+        "booted_at": 1671188840,
+        "last_backup": 1671185430,
+        "masterslave": {
+          "is_slave": false,
+          "master_ip": ""
+        }
+      }
+    }
+  }
+}
