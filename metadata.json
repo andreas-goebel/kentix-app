@@ -1,4 +1,6 @@
 {
+  "name": "kentix",
+  "elionaMinVersion": "10.1.0",
   "displayName": {
     "en": "Kentix app",
     "de": "Kentix app"
@@ -10,7 +12,8 @@
   "dashboardTemplateNames": [
     "Kentix devices"
   ],
-  "apiSpecificationPath": "/v1/version/openapi.json",
+  "apiUrl": "v1",
+  "apiSpecificationPath": "/version/openapi.json",
   "documentationUrl": "https://doc.eliona.io/collection/eliona-apps/externe-apps/kentix",
   "useEnvironment": [ "CONNECTION_STRING", "API_ENDPOINT", "API_TOKEN" ]
 }
