@@ -32,16 +32,20 @@ WHERE asset_id IN (
 	SELECT asset_id
 	FROM public.asset
 	WHERE asset_type LIKE E'kentix\\_%'
+		AND asset_type NOT LIKE E'kentix\\_one\\_%'
 );
 
 DELETE FROM public.attribute_schema
-WHERE asset_type LIKE E'kentix\\_%';
+WHERE asset_type LIKE E'kentix\\_%'
+	AND asset_type NOT LIKE E'kentix\\_one\\_%';
 
 DELETE FROM public.asset
-WHERE asset_type LIKE E'kentix\\_%';
+WHERE asset_type LIKE E'kentix\\_%'
+	AND asset_type NOT LIKE E'kentix\\_one\\_%';
 
 DELETE FROM public.asset_type
-WHERE asset_type LIKE E'kentix\\_%';
+WHERE asset_type LIKE E'kentix\\_%'
+	AND asset_type NOT LIKE E'kentix\\_one\\_%';
 
 DELETE FROM public.widget_data
 WHERE widget_id IN (
