@@ -17,6 +17,7 @@ package main
 
 import (
 	"context"
+	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
 	"kentix/apiserver"
 	"kentix/apiservices"
 	"kentix/conf"
@@ -136,10 +137,11 @@ func collectDataForConfig(config apiserver.Configuration) {
 // listenApiRequests starts an API server and listen for API requests.
 // The API endpoints are defined in the openapi.yaml file.
 func listenApiRequests() {
-	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), apiserver.NewRouter(
-		apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
-		apiserver.NewVersionApiController(apiservices.NewVersionApiService()),
-		apiserver.NewCustomizationApiController(apiservices.NewCustomizationApiService()),
-	))
+	err := http.ListenAndServe(":"+common.Getenv("API_SERVER_PORT", "3000"), utilshttp.NewCORSEnabledHandler(
+		apiserver.NewRouter(
+			apiserver.NewConfigurationApiController(apiservices.NewConfigurationApiService()),
+			apiserver.NewVersionApiController(apiservices.NewVersionApiService()),
+			apiserver.NewCustomizationApiController(apiservices.NewCustomizationApiService()),
+		)))
 	log.Fatal("main", "Error in API Server: %v", err)
 }
