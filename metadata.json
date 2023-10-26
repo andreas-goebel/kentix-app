@@ -2,8 +2,8 @@
   "name": "kentix",
   "elionaMinVersion": "v10.1.0",
   "displayName": {
-    "en": "Kentix app",
-    "de": "Kentix app"
+    "en": "Kentix",
+    "de": "Kentix"
   },
   "description": {
     "en": "The Kentix app allows access to Kentix devices.",
