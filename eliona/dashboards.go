@@ -36,7 +36,7 @@ func KentixDevicesDashboard(projectId string) (api.Dashboard, error) {
 		ProjectId(projectId).
 		Execute()
 	if err != nil {
-		return api.Dashboard{}, fmt.Errorf("fetching MulitSensor assets: %v", err)
+		return api.Dashboard{}, fmt.Errorf("fetching MultiSensor assets: %v", err)
 	}
 	for _, multiSensor := range multiSensors {
 		widget := api.Widget{
