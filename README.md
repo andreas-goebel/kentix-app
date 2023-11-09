@@ -5,6 +5,8 @@ This app collects data from Kentix devices such as AccessManager, AlarmManager a
 
 For AccessManager the app discovers all connected smart doorlocks and allows access to their status in Eliona.
 
+NOTE: This app is passing numeric data to Eliona as strings. That was done as a way to overcome inconsistent data formats that the Kentix API provides. This causes that aggregation is not working for the Kentix data. Before deployment, we should change this and work around the inconsistent data formats provided.
+
 ## Configuration
 
 The app needs environment variables and database tables for configuration. To edit the database tables the app provides an own API access.
