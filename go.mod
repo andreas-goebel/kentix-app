@@ -3,9 +3,9 @@ module kentix
 go 1.18
 
 require (
-	github.com/eliona-smart-building-assistant/app-integration-tests v0.0.5
-	github.com/eliona-smart-building-assistant/go-eliona v1.9.29
-	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.6.1
+	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.2
+	github.com/eliona-smart-building-assistant/go-eliona v1.9.31
+	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.6.3
 	github.com/eliona-smart-building-assistant/go-utils v1.0.61
 	github.com/friendsofgo/errors v0.9.2
 	github.com/gorilla/mux v1.8.1
