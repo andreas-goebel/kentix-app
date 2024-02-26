@@ -5,6 +5,8 @@ This app collects data from Kentix devices such as AccessManager, AlarmManager a
 
 For AccessManager the app discovers all connected smart doorlocks and allows access to their status in Eliona.
 
+NOTE: This app is passing numeric data to Eliona as strings. That was done as a way to overcome inconsistent data formats that the Kentix API provides. This causes that aggregation is not working for the Kentix data. Before deployment, we should change this and work around the inconsistent data formats provided.
+
 ## Configuration
 
 The app needs environment variables and database tables for configuration. To edit the database tables the app provides an own API access.
@@ -17,9 +19,9 @@ The registration could be done using the reset script.
 
 ### Environment variables
 
-- `APPNAME`: must be set to `kentix`. Some resources use this name to identify the app inside an Eliona environment.
+- `CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). Otherwise, the app can't be initialized and started (e.g. `postgres://user:pass@localhost:5432/iot`).
 
-- `CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-utils/tree/main/db). (e.g. `postgres://user:pass@localhost:5432/iot`)
+- `INIT_CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db) for app initialization like creating schema and tables (e.g. `postgres://user:pass@localhost:5432/iot`). Default is content of `CONNECTION_STRING`.
 
 - `API_ENDPOINT`:  configures the endpoint to access the [Eliona API v2](https://github.com/eliona-smart-building-assistant/eliona-api). Otherwise, the app can't be initialized and started. (e.g. `http://api-v2:3000/v2`)
 

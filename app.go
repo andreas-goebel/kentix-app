@@ -17,7 +17,6 @@ package main
 
 import (
 	"context"
-	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
 	"kentix/apiserver"
 	"kentix/apiservices"
 	"kentix/conf"
@@ -26,9 +25,28 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/eliona-smart-building-assistant/go-eliona/app"
+	"github.com/eliona-smart-building-assistant/go-utils/db"
+	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
+
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
+
+func initialization() {
+	ctx := context.Background()
+
+	// Necessary to close used init resources
+	conn := db.NewInitConnectionWithContextAndApplicationName(ctx, app.AppName())
+	defer conn.Close(ctx)
+
+	// Init the app before the first run.
+	app.Init(conn, app.AppName(),
+		app.ExecSqlFile("conf/init.sql"),
+		conf.InitConfiguration,
+		eliona.InitEliona,
+	)
+}
 
 func collectData() {
 	configs, err := conf.GetConfigs(context.Background())
