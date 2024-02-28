@@ -34,7 +34,5 @@ COPY openapi.yaml /
 COPY metadata.json /
 COPY eliona/*.json ./eliona/
 
-ENV APPNAME=kentix
-
 ENV TZ=Europe/Zurich
 CMD [ "/app" ]
